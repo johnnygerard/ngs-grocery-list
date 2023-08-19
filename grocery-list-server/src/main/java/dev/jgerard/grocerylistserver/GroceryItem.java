@@ -6,13 +6,13 @@ import jakarta.persistence.Id;
 
 @Entity
 public class GroceryItem {
+    private static final int MAX_QUANTITY = 99;
+    private static final int MIN_QUANTITY = 1;
     @Id
     @GeneratedValue
     private Long id;
     private GroceryItemName name;
     private int quantity;
-    private static final int MAX_QUANTITY = 99;
-    private static final int MIN_QUANTITY = 1;
 
     public GroceryItem() {
     }
@@ -21,6 +21,7 @@ public class GroceryItem {
         this.name = name;
         this.quantity = MIN_QUANTITY;
     }
+
     public GroceryItem(GroceryItemName name, int quantity) {
         this.name = name;
         this.setQuantity(quantity);
