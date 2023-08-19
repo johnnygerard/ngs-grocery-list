@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle'
+import { GroceryListComponent } from './grocery-list/grocery-list.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, MatSlideToggleModule],
+  imports: [CommonModule, GroceryListComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
