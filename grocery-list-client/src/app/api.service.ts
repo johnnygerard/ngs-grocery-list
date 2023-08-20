@@ -38,14 +38,26 @@ export class ApiService {
     this.http
       .delete<void>(`/api/grocery-item/${id}`)
       .subscribe(() => {
-        const index = this.#groceryList.findIndex(item => item.id === id);
+        const index = this.#findGroceryItem(id);
 
-        if (index < 0) throw Error(`Grocery item with id ${id} not found`);
         this.#groceryList.splice(index, 1);
       });
   }
 
-  updateGroceryItemQuantity(id: bigint, quantity: number) {
-    return this.http.patch<GroceryItem>(`/api/grocery-item/${id}?q=${quantity}`, null);
+  updateGroceryItemQuantity(id: bigint, quantity: number): void {
+    this.http
+      .patch<GroceryItem>(`/api/grocery-item/${id}?q=${quantity}`, null)
+      .subscribe(() => {
+        const index = this.#findGroceryItem(id);
+
+        this.#groceryList[index].quantity = quantity;
+      });
+  }
+
+  #findGroceryItem(id: bigint): number {
+    const index = this.#groceryList.findIndex(item => item.id === id);
+
+    if (index < 0) throw Error(`Grocery item with id ${id} not found`);
+    return index;
   }
 }
