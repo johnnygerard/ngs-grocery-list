@@ -18,6 +18,10 @@ export class GroceryListComponent {
     return this.api.groceryList;
   }
 
+  get isGroceryListEmpty(): boolean {
+    return this.groceryList.length === 0;
+  }
+
   clearList(): void {
     this.api.deleteGroceryList();
   }
