@@ -1,0 +1,20 @@
+<form (ngSubmit)="addGroceryItem()"
+  #form="ngForm">
+  <label for="groceryName">Article</label>
+  <select id="groceryName"
+    name="name"
+    [(ngModel)]="selectedOption"
+    required>
+    <option *ngFor="let option of options$ | async"
+      [value]="option"
+      [label]="option | groceryName">
+  </select>
+  <label for="groceryQuantity">Quantity</label>
+  <input type="number"
+    name="quantity"
+    id="groceryQuantity"
+    min="1"
+    max="99"
+    [(ngModel)]="quantity">
+  <button [disabled]="form.invalid">Add to List</button>
+</form>
