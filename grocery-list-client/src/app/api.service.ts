@@ -21,9 +21,7 @@ export class ApiService {
   }
 
   addGroceryItem(name: string, quantity: number) {
-    return this.http.post<GroceryItem>(`/api/grocery-item/${name}`, {
-      params: { q: quantity }
-    });
+    return this.http.post<GroceryItem>(`/api/grocery-item/${name}?q=${quantity}`, null);
   }
 
   deleteGroceryItem(id: bigint) {
@@ -31,8 +29,6 @@ export class ApiService {
   }
 
   updateGroceryItemQuantity(id: bigint, quantity: number) {
-    return this.http.patch<GroceryItem>(`/api/grocery-item/${id}`, {
-      params: { q: quantity }
-    });
+    return this.http.patch<GroceryItem>(`/api/grocery-item/${id}?q=${quantity}`, null);
   }
 }
