@@ -1,2 +1,16 @@
-<span>{{ name }}</span>
-<span>Qty: {{ quantity }}</span>
+<span>{{ item.name | groceryName }}</span>
+<span>Qty: {{ item.quantity }}</span>
+<button type="button" (click)="dialog.showModal()">Edit</button>
+<button type="button" (click)="deleteItem()">Delete</button>
+
+<!-- Edit quantity dialog -->
+<dialog #dialog>
+  <form method="dialog" #form="ngForm" (ngSubmit)="updateQuantity()">
+    <label>
+      <span>Quantity</span>
+      <input name="quantity" type="number" min="1" max="99" [(ngModel)]="quantity" />
+    </label>
+    <button [disabled]="form.invalid">Save</button>
+    <button type="button" (click)="dialog.close()">Cancel</button>
+  </form>
+</dialog>

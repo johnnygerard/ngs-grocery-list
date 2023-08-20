@@ -1,3 +1,5 @@
+<button type="button"
+  [disabled]="isGroceryListEmpty"
+  (click)="clearList()">Clear List</button>
 <app-grocery-item *ngFor="let item of groceryList"
-  [name]="item.name"
-  [quantity]="item.quantity" />
+  [item]="item" />

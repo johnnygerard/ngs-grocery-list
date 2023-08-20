@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GroceryItem } from 'src/models/grocery-item.type';
 import { ApiService } from '../api.service';
 import { GroceryItemComponent } from '../grocery-item/grocery-item.component';
+import { GroceryItem } from 'src/models/grocery-item.type';
 
 @Component({
   selector: 'app-grocery-list',
@@ -12,11 +12,17 @@ import { GroceryItemComponent } from '../grocery-item/grocery-item.component';
   styleUrls: ['./grocery-list.component.scss']
 })
 export class GroceryListComponent {
-  groceryList: GroceryItem[] = [];
+  constructor(private api: ApiService) { }
 
-  constructor(private api: ApiService) {
-    this.api.getGroceryList().subscribe(
-      list => this.groceryList = list
-    );
+  get groceryList(): GroceryItem[] {
+    return this.api.groceryList;
+  }
+
+  get isGroceryListEmpty(): boolean {
+    return this.groceryList.length === 0;
+  }
+
+  clearList(): void {
+    this.api.deleteGroceryList();
   }
 }

@@ -1,5 +1,5 @@
 export type GroceryItem = {
-  id: bigint;
-  name: string;
+  readonly id: bigint;
+  readonly name: string;
   quantity: number;
 }
