@@ -34,8 +34,15 @@ export class ApiService {
       .subscribe(item => this.#groceryList.push(item));
   }
 
-  deleteGroceryItem(id: bigint) {
-    return this.http.delete<void>(`/api/grocery-item/${id}`);
+  deleteGroceryItem(id: bigint): void {
+    this.http
+      .delete<void>(`/api/grocery-item/${id}`)
+      .subscribe(() => {
+        const index = this.#groceryList.findIndex(item => item.id === id);
+
+        if (index < 0) throw Error(`Grocery item with id ${id} not found`);
+        this.#groceryList.splice(index, 1);
+      });
   }
 
   updateGroceryItemQuantity(id: bigint, quantity: number) {

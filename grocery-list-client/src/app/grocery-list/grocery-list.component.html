@@ -1,4 +1,4 @@
-<button type="button" (click)="clearList()">Clear List</button>
+<button type="button"
+  (click)="clearList()">Clear List</button>
 <app-grocery-item *ngFor="let item of groceryList"
-  [name]="item.name"
-  [quantity]="item.quantity" />
+  [item]="item" />

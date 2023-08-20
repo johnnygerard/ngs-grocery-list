@@ -1,2 +1,3 @@
-<span>{{ name }}</span>
-<span>Qty: {{ quantity }}</span>
+<span>{{ item.name | groceryName }}</span>
+<span>Qty: {{ item.quantity }}</span>
+<button type="button" (click)="deleteItem()">Delete</button>
