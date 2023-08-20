@@ -29,7 +29,7 @@ public class ApiController {
         repository.deleteAll();
     }
 
-    @PutMapping("/grocery-item/{name}")
+    @PostMapping("/grocery-item/{name}")
     public GroceryItem addGroceryItem(
             @PathVariable String name,
             @RequestParam(name = "q", defaultValue = "1") int quantity) {
