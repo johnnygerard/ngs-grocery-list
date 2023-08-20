@@ -6,22 +6,32 @@ import { GroceryItem } from 'src/models/grocery-item.type';
   providedIn: 'root'
 })
 export class ApiService {
-  constructor(private http: HttpClient) { }
+  #groceryList: GroceryItem[] = [];
 
-  getGroceryList() {
-    return this.http.get<GroceryItem[]>('/api/grocery-list');
+  constructor(private http: HttpClient) {
+    this.http.get<GroceryItem[]>('/api/grocery-list').subscribe(
+      list => this.#groceryList = list
+    );
+  }
+
+  get groceryList(): GroceryItem[] {
+    return this.#groceryList;
   }
 
   getGroceryOptions() {
     return this.http.get<string[]>('/api/grocery-options');
   }
 
-  deleteGroceryList() {
-    return this.http.delete<void>('/api/grocery-list');
+  deleteGroceryList(): void {
+    this.http
+      .delete<void>('/api/grocery-list')
+      .subscribe(() => this.#groceryList = []);
   }
 
-  addGroceryItem(name: string, quantity: number) {
-    return this.http.post<GroceryItem>(`/api/grocery-item/${name}?q=${quantity}`, null);
+  addGroceryItem(name: string, quantity: number): void {
+    this.http
+      .post<GroceryItem>(`/api/grocery-item/${name}?q=${quantity}`, null)
+      .subscribe(item => this.#groceryList.push(item));
   }
 
   deleteGroceryItem(id: bigint) {

@@ -23,7 +23,7 @@ export class AddGroceryItemComponent {
   constructor(private api: ApiService) { }
 
   addGroceryItem(): void {
-    this.api.addGroceryItem(this.selectedOption, this.quantity).subscribe();
+    this.api.addGroceryItem(this.selectedOption, this.quantity);
     this.selectedOption = '';
     this.quantity = 1;
   }
