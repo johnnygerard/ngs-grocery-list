@@ -3,6 +3,7 @@
     <span class="grocery-name">{{ item.name | groceryName }}</span>
     <span>Qty: {{ item.quantity }}</span>
     <button type="button"
+            mat-icon-button
             (click)="dialog.showModal()">
       <mat-icon aria-hidden="false"
                 aria-label="Edit article"
@@ -11,6 +12,7 @@
       </mat-icon>
     </button>
     <button type="button"
+            mat-icon-button
             (click)="deleteItem()">
       <mat-icon aria-hidden="false"
                 aria-label="Delete article"
