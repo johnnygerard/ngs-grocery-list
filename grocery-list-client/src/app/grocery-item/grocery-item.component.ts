@@ -5,6 +5,7 @@ import { GroceryItem } from 'src/models/grocery-item.type';
 import { GroceryNamePipe } from '../grocery-name.pipe';
 import { FormsModule } from '@angular/forms';
 import {MatIconModule} from '@angular/material/icon';
+import {MatCardModule} from '@angular/material/card';
 
 @Component({
   selector: 'app-grocery-item',
@@ -14,6 +15,7 @@ import {MatIconModule} from '@angular/material/icon';
     GroceryNamePipe,
     FormsModule,
     MatIconModule,
+    MatCardModule,
   ],
   templateUrl: './grocery-item.component.html',
   styleUrls: ['./grocery-item.component.scss']

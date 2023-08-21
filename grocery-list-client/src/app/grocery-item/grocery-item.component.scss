@@ -1,5 +1,18 @@
 :host {
+  display: block;
+}
+
+mat-card-content {
   display: flex;
+  flex-direction: row;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+}
+
+mat-icon {
+  display: block;
+}
+
+.grocery-name {
+  margin-right: auto;
 }
