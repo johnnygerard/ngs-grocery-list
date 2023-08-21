@@ -1,0 +1,31 @@
+<form #form="ngForm">
+  <h1 mat-dialog-title>Edit "{{ data.name | groceryName }}"</h1>
+  <div mat-dialog-content>
+    <mat-form-field>
+      <mat-label>Quantity</mat-label>
+      <input type="number"
+             matInput
+             name="quantity"
+             min="1"
+             max="99"
+             required
+             #quantityInput
+             (focus)="quantityInput.select()"
+             [(ngModel)]="quantity">
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions
+       align="end">
+    <button mat-button
+            mat-dialog-close>
+      Cancel
+    </button>
+    <button mat-raised-button
+            type="submit"
+            color="primary"
+            [disabled]="form.invalid || quantity === initialQuantity"
+            [mat-dialog-close]="quantity">
+      Save
+    </button>
+  </div>
+</form>
