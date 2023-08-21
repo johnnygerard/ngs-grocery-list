@@ -1,4 +1,6 @@
 <button type="button"
+  mat-stroked-button
+  color="warn"
   [disabled]="isGroceryListEmpty"
   (click)="clearList()">Clear List</button>
 <app-grocery-item *ngFor="let item of groceryList"
