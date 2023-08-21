@@ -1,7 +1,7 @@
 <mat-card>
   <mat-card-content>
     <span class="grocery-name">{{ item.name | groceryName }}</span>
-    <span>Qty: {{ item.quantity }}</span>
+    <span>{{ item.quantity }}</span>
     <button type="button"
             mat-icon-button
             (click)="openEditDialog()">
