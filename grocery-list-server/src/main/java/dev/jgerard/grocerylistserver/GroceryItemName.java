@@ -3,24 +3,24 @@ package dev.jgerard.grocerylistserver;
 public enum GroceryItemName {
     APPLES,
     BANANAS,
+    BEEF,
     BREAD,
     BUTTER,
     CARROTS,
-    PEANUT_BUTTER,
-    JELLY,
-    MILK,
-    EGGS,
     CHEESE,
     CHICKEN,
-    BEEF,
-    PORK,
+    EGGS,
     FISH,
-    RICE,
-    PASTA,
-    TOMATOES,
-    POTATOES,
+    JELLY,
+    MILK,
     ONIONS,
-    PEPPERS;
+    PASTA,
+    PEANUT_BUTTER,
+    PEPPERS,
+    PORK,
+    POTATOES,
+    RICE,
+    TOMATOES;
 
     // Capitalize name and replace underscores with spaces
     @Override
