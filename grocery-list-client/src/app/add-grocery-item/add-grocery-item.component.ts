@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../api.service';
 import { GroceryNamePipe } from '../grocery-name.pipe';
 import { FormsModule } from '@angular/forms';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatSelectModule} from '@angular/material/select';
-import {MatInputModule} from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-add-grocery-item',
@@ -17,6 +18,7 @@ import {MatInputModule} from '@angular/material/input';
     MatFormFieldModule,
     MatSelectModule,
     MatInputModule,
+    MatButtonModule,
   ],
   templateUrl: './add-grocery-item.component.html',
   styleUrls: ['./add-grocery-item.component.scss']

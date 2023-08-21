@@ -20,5 +20,8 @@
       required
       [(ngModel)]="quantity">
   </mat-form-field>
-  <button [disabled]="form.invalid">Add to List</button>
+  <button type="submit"
+    [disabled]="form.invalid"
+    mat-raised-button
+    color="accent">Add to List</button>
 </form>
