@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Warning: This is an irreversible action!</h1>
+<p mat-dialog-content>
+  Please confirm to proceed.
+</p>
+<div mat-dialog-actions align="end">
+  <button mat-button
+          [mat-dialog-close]="false">
+    Cancel
+  </button>
+  <button mat-raised-button
+          color="warn"
+          [mat-dialog-close]="true">
+    Clear list
+  </button>
+</div>
