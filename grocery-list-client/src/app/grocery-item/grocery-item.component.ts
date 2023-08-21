@@ -3,9 +3,10 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../api.service';
 import { GroceryItem } from 'src/models/grocery-item.type';
 import { GroceryNamePipe } from '../grocery-name.pipe';
-import { FormsModule } from '@angular/forms';
-import {MatIconModule} from '@angular/material/icon';
-import {MatCardModule} from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatDialog } from '@angular/material/dialog';
+import { EditGroceryItemDialogComponent } from '../edit-grocery-item-dialog/edit-grocery-item-dialog.component';
 
 @Component({
   selector: 'app-grocery-item',
@@ -13,7 +14,6 @@ import {MatCardModule} from '@angular/material/card';
   imports: [
     CommonModule,
     GroceryNamePipe,
-    FormsModule,
     MatIconModule,
     MatCardModule,
   ],
@@ -22,15 +22,24 @@ import {MatCardModule} from '@angular/material/card';
 })
 export class GroceryItemComponent {
   @Input({ required: true }) item!: GroceryItem;
-  quantity = 1;
 
-  constructor(private api: ApiService) { }
+  constructor(
+    private api: ApiService,
+    private dialog: MatDialog
+  ) { }
 
   deleteItem(): void {
     this.api.deleteGroceryItem(this.item.id);
   }
 
-  updateQuantity(): void {
-    this.api.updateGroceryItemQuantity(this.item.id, this.quantity);
+  openEditDialog() {
+    const dialogRef = this.dialog.open(EditGroceryItemDialogComponent, {
+      data: { ...this.item }
+    });
+
+    dialogRef.afterClosed().subscribe(quantity => {
+      if (typeof quantity === 'number')
+        this.api.updateGroceryItemQuantity(this.item.id, quantity);
+    });
   }
 }
