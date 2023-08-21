@@ -1,20 +1,27 @@
-<form (ngSubmit)="addGroceryItem()"
+<form (ngSubmit)="addGroceryItem(); form.resetForm({ quantity: 1 })"
   #form="ngForm">
-  <label for="groceryName">Article</label>
-  <select id="groceryName"
-    name="name"
-    [(ngModel)]="selectedOption"
-    required>
-    <option *ngFor="let option of options$ | async"
-      [value]="option"
-      [label]="option | groceryName">
-  </select>
-  <label for="groceryQuantity">Quantity</label>
-  <input type="number"
-    name="quantity"
-    id="groceryQuantity"
-    min="1"
-    max="99"
-    [(ngModel)]="quantity">
-  <button [disabled]="form.invalid">Add to List</button>
+  <mat-form-field>
+    <mat-label>Article</mat-label>
+    <mat-select [(ngModel)]="selectedOption"
+      name="groceryName"
+      required>
+      <mat-option>None</mat-option>
+      <mat-option *ngFor="let option of options$ | async"
+        [value]="option">{{ option | groceryName }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Quantity</mat-label>
+    <input type="number"
+      matInput
+      name="quantity"
+      min="1"
+      max="99"
+      required
+      [(ngModel)]="quantity">
+  </mat-form-field>
+  <button type="submit"
+    [disabled]="form.invalid"
+    mat-raised-button
+    color="accent">Add to List</button>
 </form>

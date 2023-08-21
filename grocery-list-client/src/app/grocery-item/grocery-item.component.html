@@ -1,16 +1,44 @@
-<span>{{ item.name | groceryName }}</span>
-<span>Qty: {{ item.quantity }}</span>
-<button type="button" (click)="dialog.showModal()">Edit</button>
-<button type="button" (click)="deleteItem()">Delete</button>
+<mat-card>
+  <mat-card-content>
+    <span class="grocery-name">{{ item.name | groceryName }}</span>
+    <span>Qty: {{ item.quantity }}</span>
+    <button type="button"
+            mat-icon-button
+            (click)="dialog.showModal()">
+      <mat-icon aria-hidden="false"
+                aria-label="Edit article"
+                fontSet="material-symbols-outlined">
+        edit
+      </mat-icon>
+    </button>
+    <button type="button"
+            mat-icon-button
+            (click)="deleteItem()">
+      <mat-icon aria-hidden="false"
+                aria-label="Delete article"
+                color="warn"
+                fontSet="material-symbols-outlined">
+        delete
+      </mat-icon>
+    </button>
+  </mat-card-content>
+</mat-card>
 
 <!-- Edit quantity dialog -->
 <dialog #dialog>
-  <form method="dialog" #form="ngForm" (ngSubmit)="updateQuantity()">
+  <form method="dialog"
+        #form="ngForm"
+        (ngSubmit)="updateQuantity()">
     <label>
       <span>Quantity</span>
-      <input name="quantity" type="number" min="1" max="99" [(ngModel)]="quantity" />
+      <input name="quantity"
+             type="number"
+             min="1"
+             max="99"
+             [(ngModel)]="quantity" />
     </label>
     <button [disabled]="form.invalid">Save</button>
-    <button type="button" (click)="dialog.close()">Cancel</button>
+    <button type="button"
+            (click)="dialog.close()">Cancel</button>
   </form>
 </dialog>

@@ -1,3 +1,14 @@
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+}
+
+.grocery-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.clear-list-button {
+  margin: 16px 0;
 }
