@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/grocery-items")
 public class ApiController {
     private final GroceryItemRepository repository;
 
@@ -14,27 +14,26 @@ public class ApiController {
         this.repository = repository;
     }
 
-    @GetMapping("/grocery-list")
-    public List<GroceryItem> getGroceryList() {
+    @GetMapping
+    public List<GroceryItem> getGroceryItems() {
         return repository.findAll();
     }
 
-    @GetMapping("/grocery-options")
+    @GetMapping("names")
     public GroceryItemName[] getGroceryOptions() {
         return GroceryItemName.values();
     }
 
-    @DeleteMapping("/grocery-list")
-    public void deleteGroceryList() {
+    @DeleteMapping
+    public void deleteGroceryItems() {
         repository.deleteAll();
     }
 
-    @PostMapping("/grocery-item/{name}")
-    public GroceryItem addGroceryItem(
+    @PostMapping("{name}")
+    public Long addGroceryItem(
             @PathVariable String name,
             @RequestParam(name = "q", defaultValue = "1") int quantity) {
-        if (repository.count() >= 99)
-            throw new IllegalStateException("Grocery list is full");
+        if (repository.count() >= 99) throw new IllegalStateException("Grocery list is full");
 
         GroceryItemName itemName;
         try {
@@ -43,18 +42,19 @@ public class ApiController {
             throw new IllegalArgumentException("Invalid grocery item name: " + name);
         }
         var item = new GroceryItem(itemName, quantity);
-        return repository.save(item);
+        repository.save(item);
+        return item.getId();
     }
 
-    @DeleteMapping("/grocery-item/{id}")
+    @DeleteMapping("{id}")
     public void deleteGroceryItem(@PathVariable Long id) {
         if (!repository.existsById(id))
             throw new NoSuchElementException("Grocery item #%d not found".formatted(id));
         repository.deleteById(id);
     }
 
-    @PatchMapping("/grocery-item/{id}")
-    public GroceryItem updateGroceryItemQuantity(
+    @PatchMapping("{id}")
+    public void updateGroceryItemQuantity(
             @PathVariable Long id,
             @RequestParam(name = "q") int quantity) {
         GroceryItem item = null;
@@ -64,6 +64,6 @@ public class ApiController {
             throw new NoSuchElementException("Grocery item #%d not found".formatted(id));
         }
         item.setQuantity(quantity);
-        return repository.save(item);
+        repository.save(item);
     }
 }
