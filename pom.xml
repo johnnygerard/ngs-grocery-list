@@ -63,7 +63,7 @@
                 <version>1.13.4</version>
                 <configuration>
                     <nodeVersion>v18.16.1</nodeVersion>
-                    <workingDirectory>../grocery-list-client</workingDirectory>
+                    <workingDirectory>ng-client</workingDirectory>
                 </configuration>
                 <!-- Goals are bound to phase: generate-resources -->
                 <executions>
