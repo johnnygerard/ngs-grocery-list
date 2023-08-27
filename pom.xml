@@ -9,10 +9,12 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>dev.jgerard</groupId>
-    <artifactId>grocery-list-server</artifactId>
+    <artifactId>ngs-grocery-list</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>grocery-list-server</name>
-    <description>grocery-list-server</description>
+    <name>Grocery List</name>
+    <description>
+        This is a demo project for a grocery list web application using Angular and Spring Boot.
+    </description>
     <properties>
         <java.version>17</java.version>
     </properties>
