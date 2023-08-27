@@ -15,5 +15,5 @@ import { GroceryListComponent } from './grocery-list/grocery-list.component';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'grocery-list-client';
+  title = 'ng-client';
 }
