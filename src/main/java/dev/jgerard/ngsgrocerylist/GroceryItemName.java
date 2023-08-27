@@ -1,4 +1,4 @@
-package dev.jgerard.grocerylistserver;
+package dev.jgerard.ngsgrocerylist;
 
 public enum GroceryItemName {
     APPLES,

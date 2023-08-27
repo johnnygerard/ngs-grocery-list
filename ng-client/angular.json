@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "grocery-list-client": {
+    "ng-client": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -24,7 +24,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "../grocery-list-server/src/main/resources/static",
+            "outputPath": "../src/main/resources/dist/ng-client",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -81,10 +81,10 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "grocery-list-client:build:production"
+              "browserTarget": "ng-client:build:production"
             },
             "development": {
-              "browserTarget": "grocery-list-client:build:development"
+              "browserTarget": "ng-client:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -92,7 +92,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "grocery-list-client:build"
+            "browserTarget": "ng-client:build"
           }
         },
         "test": {

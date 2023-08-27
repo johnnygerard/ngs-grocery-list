@@ -1,4 +1,4 @@
-package dev.jgerard.grocerylistserver;
+package dev.jgerard.ngsgrocerylist;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

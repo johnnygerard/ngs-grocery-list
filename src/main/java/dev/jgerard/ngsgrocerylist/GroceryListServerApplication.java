@@ -1,4 +1,4 @@
-package dev.jgerard.grocerylistserver;
+package dev.jgerard.ngsgrocerylist;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

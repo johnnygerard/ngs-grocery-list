@@ -1,5 +1,5 @@
 {
-  "name": "grocery-list-client",
+  "name": "ng-client",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
