@@ -73,11 +73,10 @@
 
     <profiles>
         <profile>
-            <id>env-heroku</id>
+            <id>heroku</id>
             <activation>
                 <property>
-                    <name>env</name>
-                    <value>heroku</value>
+                    <name>env.DYNO</name>
                 </property>
             </activation>
             <build>
@@ -115,6 +114,26 @@
                                 </goals>
                                 <configuration>
                                     <arguments>run build</arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>Remove build artifacts</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>clean</goal>
+                                </goals>
+                                <configuration>
+                                    <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                                    <filesets>
+                                        <fileset>
+                                            <directory>ng-client</directory>
+                                        </fileset>
+                                    </filesets>
                                 </configuration>
                             </execution>
                         </executions>
