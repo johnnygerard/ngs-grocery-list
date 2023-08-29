@@ -73,11 +73,10 @@
 
     <profiles>
         <profile>
-            <id>env-heroku</id>
+            <id>heroku</id>
             <activation>
                 <property>
-                    <name>env</name>
-                    <value>heroku</value>
+                    <name>env.DYNO</name>
                 </property>
             </activation>
             <build>
