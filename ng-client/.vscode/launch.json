@@ -1,0 +1,29 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Load Angular App in Chrome",
+      "type": "chrome",
+      "request": "launch",
+      "preLaunchTask": "serve",
+      "url": "http://localhost:4200/",
+      "webRoot": "${workspaceFolder}/src",
+      "runtimeArgs": [
+        "--auto-open-devtools-for-tabs",
+        "--user-data-dir=${userHome}/.config/vscode-chrome-dev"
+      ]
+    },
+    {
+      "name": "Load Angular App in Chrome (prod)",
+      "type": "chrome",
+      "request": "launch",
+      "preLaunchTask": "serve (prod)",
+      "url": "http://localhost:4200/",
+      "webRoot": "${workspaceFolder}/src",
+      "runtimeArgs": [
+        "--auto-open-devtools-for-tabs",
+        "--user-data-dir=${userHome}/.config/vscode-chrome-dev"
+      ]
+    }
+  ]
+}
