@@ -41,7 +41,9 @@ public class ApiController {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid grocery item name: " + name);
         }
-        var item = new GroceryItem(itemName, quantity);
+        var item = new GroceryItem();
+        item.setName(itemName);
+        item.setQuantity(quantity);
         repository.save(item);
         return item.getId();
     }
