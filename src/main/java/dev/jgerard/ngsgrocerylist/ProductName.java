@@ -1,6 +1,6 @@
 package dev.jgerard.ngsgrocerylist;
 
-public enum GroceryItemName {
+public enum ProductName {
     APPLES,
     BANANAS,
     BEEF,

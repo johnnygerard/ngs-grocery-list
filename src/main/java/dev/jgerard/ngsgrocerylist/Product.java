@@ -7,11 +7,11 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
 @Entity
-public class GroceryItem {
+public class Product {
     @Id
     @GeneratedValue
     private Long id;
-    private GroceryItemName name;
+    private ProductName name;
     @Min(1)
     @Max(99)
     private int quantity;
@@ -24,11 +24,11 @@ public class GroceryItem {
         return id;
     }
 
-    public GroceryItemName getName() {
+    public ProductName getName() {
         return name;
     }
 
-    public void setName(GroceryItemName name) {
+    public void setName(ProductName name) {
         this.name = name;
     }
 

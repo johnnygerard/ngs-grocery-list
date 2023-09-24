@@ -6,66 +6,66 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/api/grocery-items")
+@RequestMapping("/api/products")
 public class ApiController {
-    private final GroceryItemRepository repository;
+    private final ProductRepository repository;
 
-    public ApiController(GroceryItemRepository repository) {
+    public ApiController(ProductRepository repository) {
         this.repository = repository;
     }
 
     @GetMapping
-    public List<GroceryItem> getGroceryItems() {
+    public List<Product> getProducts() {
         return repository.findAll();
     }
 
     @GetMapping("names")
-    public GroceryItemName[] getGroceryOptions() {
-        return GroceryItemName.values();
+    public ProductName[] getGroceryOptions() {
+        return ProductName.values();
     }
 
     @DeleteMapping
-    public void deleteGroceryItems() {
+    public void deleteProducts() {
         repository.deleteAll();
     }
 
     @PostMapping("{name}")
-    public Long addGroceryItem(
+    public Long addProduct(
             @PathVariable String name,
             @RequestParam(name = "q", defaultValue = "1") int quantity) {
         if (repository.count() >= 99) throw new IllegalStateException("Grocery list is full");
 
-        GroceryItemName itemName;
+        ProductName productName;
         try {
-            itemName = GroceryItemName.valueOf(name);
+            productName = ProductName.valueOf(name);
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid grocery item name: " + name);
+            throw new IllegalArgumentException("Invalid product name: " + name);
         }
-        var item = new GroceryItem();
-        item.setName(itemName);
-        item.setQuantity(quantity);
-        repository.save(item);
-        return item.getId();
+        var product = new Product();
+        product.setName(productName);
+        product.setQuantity(quantity);
+        repository.save(product);
+        return product.getId();
     }
 
     @DeleteMapping("{id}")
-    public void deleteGroceryItem(@PathVariable Long id) {
+    public void deleteProduct(@PathVariable Long id) {
         if (!repository.existsById(id))
-            throw new NoSuchElementException("Grocery item #%d not found".formatted(id));
+            throw new NoSuchElementException("Product #%d not found".formatted(id));
         repository.deleteById(id);
     }
 
     @PatchMapping("{id}")
-    public void updateGroceryItemQuantity(
+    public void updateProductQuantity(
             @PathVariable Long id,
             @RequestParam(name = "q") int quantity) {
-        GroceryItem item = null;
+        Product product = null;
         try {
-            item = repository.findById(id).orElseThrow();
+            product = repository.findById(id).orElseThrow();
         } catch (NoSuchElementException e) {
-            throw new NoSuchElementException("Grocery item #%d not found".formatted(id));
+            throw new NoSuchElementException("Product #%d not found".formatted(id));
         }
-        item.setQuantity(quantity);
-        repository.save(item);
+        product.setQuantity(quantity);
+        repository.save(product);
     }
 }
