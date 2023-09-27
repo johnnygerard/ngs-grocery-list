@@ -1,7 +1,10 @@
 package dev.jgerard.ngsgrocerylist;
 
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -29,23 +32,15 @@ public class ApiController {
         repository.deleteAll();
     }
 
-    @PostMapping("{name}")
-    public Long addProduct(
-            @PathVariable String name,
-            @RequestParam(name = "q", defaultValue = "1") int quantity) {
-        if (repository.count() >= 99) throw new IllegalStateException("Grocery list is full");
+    @PostMapping
+    public ResponseEntity<Void> addProduct(@RequestBody @Valid Product product) {
+        if (repository.count() > 99) throw new IllegalStateException("Grocery list is full");
+        // Ensure the product ID is auto-generated
+        if (product.getId() != null) throw new IllegalArgumentException("Product ID must be null");
 
-        ProductName productName;
-        try {
-            productName = ProductName.valueOf(name);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid product name: " + name);
-        }
-        var product = new Product();
-        product.setName(productName);
-        product.setQuantity(quantity);
         repository.save(product);
-        return product.getId();
+        URI location = URI.create("/api/products/" + product.getId());
+        return ResponseEntity.created(location).build();
     }
 
     @DeleteMapping("{id}")
@@ -57,8 +52,9 @@ public class ApiController {
 
     @PatchMapping("{id}")
     public void updateProductQuantity(
-            @PathVariable Long id,
-            @RequestParam(name = "q") int quantity) {
+        @PathVariable Long id,
+        @RequestParam(name = "q") int quantity
+    ) {
         Product product = null;
         try {
             product = repository.findById(id).orElseThrow();
