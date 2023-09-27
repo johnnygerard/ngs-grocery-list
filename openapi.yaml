@@ -9,6 +9,18 @@ servers:
     url: https://virtserver.swaggerhub.com/jgerard.dev/ngs-grocery-list/1.0.0
 paths:
   /products:
+    get:
+      summary: Fetch the entire list of grocery items.
+      operationId: getAllProducts
+      responses:
+        '200':
+          description: Full list of grocery items.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/product'
     post:
       summary: Add a new grocery item.
       operationId: addProduct
@@ -46,18 +58,6 @@ paths:
                   message:
                     type: string
                     example: The product could not be added because of insufficient memory.
-    get:
-      summary: Fetch the entire list of grocery items.
-      operationId: getAllProducts
-      responses:
-        '200':
-          description: Full list of grocery items.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/product'
     delete:
       summary: Clear the entire grocery list.
       operationId: deleteAllProducts

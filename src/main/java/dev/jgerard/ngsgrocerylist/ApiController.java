@@ -22,16 +22,6 @@ public class ApiController {
         return repository.findAll();
     }
 
-    @GetMapping("names")
-    public ProductName[] getGroceryOptions() {
-        return ProductName.values();
-    }
-
-    @DeleteMapping
-    public void deleteProducts() {
-        repository.deleteAll();
-    }
-
     @PostMapping
     public ResponseEntity<Void> addProduct(@RequestBody @Valid Product product) {
         if (repository.count() > 99) throw new IllegalStateException("Grocery list is full");
@@ -43,11 +33,9 @@ public class ApiController {
         return ResponseEntity.created(location).build();
     }
 
-    @DeleteMapping("{id}")
-    public void deleteProduct(@PathVariable Long id) {
-        if (!repository.existsById(id))
-            throw new NoSuchElementException("Product #%d not found".formatted(id));
-        repository.deleteById(id);
+    @DeleteMapping
+    public void deleteProducts() {
+        repository.deleteAll();
     }
 
     @PatchMapping("{id}")
@@ -63,5 +51,17 @@ public class ApiController {
         }
         product.setQuantity(quantity);
         repository.save(product);
+    }
+
+    @DeleteMapping("{id}")
+    public void deleteProduct(@PathVariable Long id) {
+        if (!repository.existsById(id))
+            throw new NoSuchElementException("Product #%d not found".formatted(id));
+        repository.deleteById(id);
+    }
+
+    @GetMapping("names")
+    public ProductName[] getGroceryOptions() {
+        return ProductName.values();
     }
 }
