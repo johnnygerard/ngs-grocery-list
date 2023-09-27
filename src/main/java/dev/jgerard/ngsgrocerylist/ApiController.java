@@ -55,11 +55,10 @@ public class ApiController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("{id}")
-    public void deleteProduct(@PathVariable Long id) {
-        if (!repository.existsById(id))
-            throw new NoSuchElementException("Product #%d not found".formatted(id));
-        repository.deleteById(id);
+    @DeleteMapping("{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+        repository.deleteById(productId);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("names")
