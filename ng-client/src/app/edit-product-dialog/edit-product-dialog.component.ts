@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { Product } from 'src/models/product.type';
 import { MatInputModule } from '@angular/material/input';
-import { GroceryNamePipe } from '../grocery-name.pipe';
+import { ProductNamePipe } from '../product-name.pipe';
 
 @Component({
   selector: 'app-edit-product-dialog',
@@ -18,7 +18,7 @@ import { GroceryNamePipe } from '../grocery-name.pipe';
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    GroceryNamePipe,
+    ProductNamePipe,
   ],
   templateUrl: './edit-product-dialog.component.html',
   styleUrls: ['./edit-product-dialog.component.scss']

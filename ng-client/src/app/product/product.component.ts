@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../api.service';
 import { Product } from 'src/models/product.type';
-import { GroceryNamePipe } from '../grocery-name.pipe';
+import { ProductNamePipe } from '../product-name.pipe';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,7 +13,7 @@ import { EditProductDialogComponent } from '../edit-product-dialog/edit-product-
   standalone: true,
   imports: [
     CommonModule,
-    GroceryNamePipe,
+    ProductNamePipe,
     MatIconModule,
     MatCardModule,
   ],

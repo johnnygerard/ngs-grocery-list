@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../api.service';
-import { GroceryNamePipe } from '../grocery-name.pipe';
+import { ProductNamePipe } from '../product-name.pipe';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -13,7 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
   standalone: true,
   imports: [
     CommonModule,
-    GroceryNamePipe,
+    ProductNamePipe,
     FormsModule,
     MatFormFieldModule,
     MatSelectModule,
