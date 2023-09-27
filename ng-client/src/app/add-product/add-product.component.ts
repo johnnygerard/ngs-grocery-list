@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-  selector: 'app-add-grocery-item',
+  selector: 'app-add-product',
   standalone: true,
   imports: [
     CommonModule,
@@ -20,17 +20,17 @@ import { MatButtonModule } from '@angular/material/button';
     MatInputModule,
     MatButtonModule,
   ],
-  templateUrl: './add-grocery-item.component.html',
-  styleUrls: ['./add-grocery-item.component.scss']
+  templateUrl: './add-product.component.html',
+  styleUrls: ['./add-product.component.scss']
 })
-export class AddGroceryItemComponent {
+export class AddProductComponent {
   options$ = this.api.getGroceryOptions();
   selectedOption = '';
   quantity = 1;
 
   constructor(private api: ApiService) { }
 
-  addGroceryItem(): void {
-    this.api.addGroceryItem(this.selectedOption, this.quantity);
+  addProduct(): void {
+    this.api.addProduct(this.selectedOption, this.quantity);
   }
 }

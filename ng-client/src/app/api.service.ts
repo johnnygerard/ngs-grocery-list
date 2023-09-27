@@ -1,23 +1,23 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { GroceryItem } from 'src/models/grocery-item.type';
+import { Product } from 'src/models/product.type';
 
-const BASE_URL = '/api/grocery-items';
+const BASE_URL = '/api/products';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  #groceryList: GroceryItem[] = [];
+  #groceryList: Product[] = [];
 
   constructor(private _http: HttpClient) {
-    this._http.get<GroceryItem[]>(BASE_URL).subscribe(
+    this._http.get<Product[]>(BASE_URL).subscribe(
       list => this.#groceryList = list
     );
   }
 
-  get groceryList(): GroceryItem[] {
+  get groceryList(): Product[] {
     return this.#groceryList;
   }
 
@@ -31,36 +31,36 @@ export class ApiService {
       .subscribe(() => this.#groceryList = []);
   }
 
-  addGroceryItem(name: string, quantity: number): void {
+  addProduct(name: string, quantity: number): void {
     this._http
       .post<bigint>(`${BASE_URL}/${name}?q=${quantity}`, null)
       .subscribe(id => this.#groceryList.push({ id, name, quantity }));
   }
 
-  deleteGroceryItem(id: bigint): void {
+  deleteProduct(id: bigint): void {
     this._http
       .delete<void>(`${BASE_URL}/${id}`)
       .subscribe(() => {
-        const index = this.#findGroceryItem(id);
+        const index = this.#findProduct(id);
 
         this.#groceryList.splice(index, 1);
       });
   }
 
-  updateGroceryItemQuantity(id: bigint, quantity: number): void {
+  updateProductQuantity(id: bigint, quantity: number): void {
     this._http
-      .patch<GroceryItem>(`${BASE_URL}/${id}?q=${quantity}`, null)
+      .patch<Product>(`${BASE_URL}/${id}?q=${quantity}`, null)
       .subscribe(() => {
-        const index = this.#findGroceryItem(id);
+        const index = this.#findProduct(id);
 
         this.#groceryList[index].quantity = quantity;
       });
   }
 
-  #findGroceryItem(id: bigint): number {
+  #findProduct(id: bigint): number {
     const index = this.#groceryList.findIndex(item => item.id === id);
 
-    if (index < 0) throw Error(`Grocery item with id ${id} not found`);
+    if (index < 0) throw Error(`Product with id ${id} not found`);
     return index;
   }
 }

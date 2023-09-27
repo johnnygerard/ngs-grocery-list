@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AddGroceryItemComponent } from './add-grocery-item/add-grocery-item.component';
+import { AddProductComponent } from './add-product/add-product.component';
 import { GroceryListComponent } from './grocery-list/grocery-list.component';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -11,7 +11,7 @@ import { deleteIcon, editIcon } from './svg-icons';
   standalone: true,
   imports: [
     CommonModule,
-    AddGroceryItemComponent,
+    AddProductComponent,
     GroceryListComponent,
   ],
   templateUrl: './app.component.html',
