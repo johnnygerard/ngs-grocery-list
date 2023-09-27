@@ -1,0 +1,12 @@
+# For manual testing, requires IntelliJ IDEA Ultimate and a running instance of the application
+###
+POST http://localhost:8080/api/products
+Content-Type: application/json
+
+{
+  "name": "APPLES",
+  "quantity": 5
+}
+
+###
+
