@@ -18,7 +18,7 @@ public class ApiController {
     }
 
     @GetMapping
-    public List<Product> getProducts() {
+    public List<Product> getAllProducts() {
         return repository.findAll();
     }
 
@@ -34,12 +34,12 @@ public class ApiController {
     }
 
     @DeleteMapping
-    public void deleteProducts() {
+    public void deleteAllProducts() {
         repository.deleteAll();
     }
 
     @PatchMapping("{id}")
-    public void updateProductQuantity(
+    public void updateQuantity(
         @PathVariable Long id,
         @RequestParam(name = "q") int quantity
     ) {
@@ -61,7 +61,7 @@ public class ApiController {
     }
 
     @GetMapping("names")
-    public ProductName[] getGroceryOptions() {
+    public ProductName[] getAllProductNames() {
         return ProductName.values();
     }
 }
