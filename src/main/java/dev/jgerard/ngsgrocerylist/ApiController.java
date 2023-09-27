@@ -34,8 +34,9 @@ public class ApiController {
     }
 
     @DeleteMapping
-    public void deleteAllProducts() {
+    public ResponseEntity<Void> deleteAllProducts() {
         repository.deleteAll();
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("{id}")
