@@ -9,12 +9,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ApiController.class)
 class ApiControllerTest {
@@ -24,8 +26,33 @@ class ApiControllerTest {
     @MockBean
     private ProductRepository repository;
 
+    // Helper method to create a product
+    private Product createProduct(Long id, ProductName name, int quantity) {
+        Product product = new Product();
+        product.setId(id);
+        product.setName(name);
+        product.setQuantity(quantity);
+        return product;
+    }
+
     @Test
-    void getAllProducts() {
+    void getAllProducts() throws Exception {
+        // given
+        List<Product> productList = List.of(
+            createProduct(1L, ProductName.APPLES, 10),
+            createProduct(2L, ProductName.BANANAS, 20),
+            createProduct(3L, ProductName.CARROTS, 30)
+        );
+        given(repository.findAll()).willReturn(productList);
+
+        // when
+        mockMvc.perform(get(BASE_URL))
+            // then
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().json(serialize(productList)));
+
+        verify(repository).findAll();
     }
 
     @Test
@@ -52,9 +79,9 @@ class ApiControllerTest {
         verify(repository).save(any(Product.class));
     }
 
-    private String serialize(Product product) throws JsonProcessingException {
+    private String serialize(Object object) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(product);
+        return mapper.writeValueAsString(object);
     }
 
     @Test
