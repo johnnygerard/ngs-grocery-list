@@ -85,18 +85,18 @@ class ApiControllerTest {
     }
 
     @Test
-    void deleteAllProducts() {
+    void deleteAllProducts() throws Exception {
     }
 
     @Test
-    void updateQuantity() {
+    void updateQuantity() throws Exception {
     }
 
     @Test
-    void deleteProduct() {
+    void deleteProduct() throws Exception {
     }
 
     @Test
-    void getAllProductNames() {
+    void getAllProductNames() throws Exception {
     }
 }
