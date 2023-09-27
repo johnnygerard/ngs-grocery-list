@@ -2,6 +2,7 @@ package dev.jgerard.ngsgrocerylist;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -10,10 +11,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.util.AssertionErrors.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -96,6 +99,21 @@ class ApiControllerTest {
 
     @Test
     void updateQuantity() throws Exception {
+        // given
+        Long productId = 3L;
+        int quantity = 10;
+        Product product = createProduct(productId, ProductName.APPLES, 20);
+        given(repository.findById(productId))
+            .willReturn(Optional.of(product));
+
+        // when
+        mockMvc.perform(patch(BASE_URL + "/{productId}", productId)
+                .param("quantity", String.valueOf(quantity)))
+            // then
+            .andExpect(status().isNoContent());
+
+        verify(repository).save(any(Product.class));
+        assertEquals("Quantity update failed", quantity, product.getQuantity());
     }
 
     @Test

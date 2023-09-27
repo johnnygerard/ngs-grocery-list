@@ -39,19 +39,20 @@ public class ApiController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("{id}")
-    public void updateQuantity(
-        @PathVariable Long id,
-        @RequestParam(name = "q") int quantity
+    @PatchMapping("{productId}")
+    public ResponseEntity<Void> updateQuantity(
+        @PathVariable Long productId,
+        @RequestParam int quantity
     ) {
-        Product product = null;
+        Product product;
         try {
-            product = repository.findById(id).orElseThrow();
+            product = repository.findById(productId).orElseThrow();
         } catch (NoSuchElementException e) {
-            throw new NoSuchElementException("Product #%d not found".formatted(id));
+            throw new NoSuchElementException("Product #%d not found".formatted(productId));
         }
         product.setQuantity(quantity);
         repository.save(product);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("{id}")
