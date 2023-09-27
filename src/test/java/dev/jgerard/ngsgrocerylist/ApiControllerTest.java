@@ -25,6 +25,10 @@ class ApiControllerTest {
     private ProductRepository repository;
 
     @Test
+    void getAllProducts() {
+    }
+
+    @Test
     void addProduct() throws Exception {
         // given
         Long productId = 2L;
@@ -51,5 +55,21 @@ class ApiControllerTest {
     private String serialize(Product product) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(product);
+    }
+
+    @Test
+    void deleteAllProducts() {
+    }
+
+    @Test
+    void updateQuantity() {
+    }
+
+    @Test
+    void deleteProduct() {
+    }
+
+    @Test
+    void getAllProductNames() {
     }
 }
