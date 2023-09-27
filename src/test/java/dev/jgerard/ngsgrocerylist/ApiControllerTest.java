@@ -35,6 +35,12 @@ class ApiControllerTest {
         return product;
     }
 
+    // Helper method to serialize an object to JSON
+    private String serialize(Object object) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(object);
+    }
+
     @Test
     void getAllProducts() throws Exception {
         // given
@@ -77,11 +83,6 @@ class ApiControllerTest {
             .andExpect(header().string("Location", "%s/%d".formatted(BASE_URL, productId)));
 
         verify(repository).save(any(Product.class));
-    }
-
-    private String serialize(Object object) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(object);
     }
 
     @Test
