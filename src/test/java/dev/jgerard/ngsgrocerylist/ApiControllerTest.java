@@ -130,5 +130,11 @@ class ApiControllerTest {
 
     @Test
     void getAllProductNames() throws Exception {
+        // when
+        mockMvc.perform(get(BASE_URL + "/names"))
+            // then
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().json(serialize(ProductName.values())));
     }
 }
