@@ -12,7 +12,7 @@ describe('ApiService', () => {
   ];
 
   beforeEach(() => {
-    httpClientMock = jasmine.createSpyObj('HttpClient', ['get', 'post']);
+    httpClientMock = jasmine.createSpyObj('HttpClient', ['get', 'post', 'delete']);
     httpClientMock.get.withArgs(BASE_URL).and.returnValue(of(initialGroceryList));
   });
 
@@ -22,8 +22,7 @@ describe('ApiService', () => {
 
     // then
     expect(service.groceryList).toBe(initialGroceryList);
-    expect(httpClientMock.get).toHaveBeenCalledWith(BASE_URL);
-    expect(httpClientMock.get).toHaveBeenCalledTimes(1);
+    expect(httpClientMock.get).toHaveBeenCalledOnceWith(BASE_URL);
   });
 
   it('should call addProduct', () => {
@@ -41,8 +40,20 @@ describe('ApiService', () => {
     service.addProduct(body.name, body.quantity);
 
     // then
-    expect(httpClientMock.post).toHaveBeenCalledTimes(1);
-    expect(httpClientMock.post).toHaveBeenCalledWith(BASE_URL, body);
+    expect(httpClientMock.post).toHaveBeenCalledOnceWith(BASE_URL, body);
     expect(service.groceryList.pop()).toEqual({ id: productId, ...body });
+  });
+
+  it('should call deleteAllProducts', () => {
+    // given
+    httpClientMock.delete.withArgs(BASE_URL).and.returnValue(of(null));
+    service = new ApiService(httpClientMock);
+
+    // when
+    service.deleteAllProducts();
+
+    // then
+    expect(httpClientMock.delete).toHaveBeenCalledOnceWith(BASE_URL);
+    expect(service.groceryList).toHaveSize(0);
   });
 });
