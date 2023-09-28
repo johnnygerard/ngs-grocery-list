@@ -94,4 +94,19 @@ describe('ApiService', () => {
     expect(httpClientMock.delete).toHaveBeenCalledOnceWith(url);
     expect(service.groceryList.find(product => product.id === productId)).toBeUndefined();
   });
+
+  it('should call getAllProductNames', () => {
+    // given
+    const names = ['APPLES', 'BANANAS', 'MILK', 'BEEF'];
+    httpClientMock.get.withArgs(`${BASE_URL}/names`).and.returnValue(of(names));
+    service = new ApiService(httpClientMock);
+
+    // when
+    service.getAllProductNames().subscribe(result => {
+      // then
+      expect(httpClientMock.get).toHaveBeenCalledTimes(2); // 1st call in constructor
+      expect(httpClientMock.get).toHaveBeenCalledWith(`${BASE_URL}/names`);
+      expect(result).toEqual(names);
+    });
+  });
 });
