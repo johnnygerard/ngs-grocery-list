@@ -21,25 +21,25 @@ import { EditProductDialogComponent } from '../edit-product-dialog/edit-product-
   styleUrls: ['./product.component.scss']
 })
 export class ProductComponent {
-  @Input({ required: true }) item!: Product;
+  @Input({ required: true }) product!: Product;
 
   constructor(
     private api: ApiService,
     private dialog: MatDialog
   ) { }
 
-  deleteItem(): void {
-    this.api.deleteProduct(this.item.id);
+  deleteProduct(): void {
+    this.api.deleteProduct(this.product.id);
   }
 
   openEditDialog() {
     const dialogRef = this.dialog.open(EditProductDialogComponent, {
-      data: { ...this.item }
+      data: { ...this.product }
     });
 
     dialogRef.afterClosed().subscribe(quantity => {
       if (typeof quantity === 'number')
-        this.api.updateQuantity(this.item.id, quantity);
+        this.api.updateQuantity(this.product.id, quantity);
     });
   }
 }

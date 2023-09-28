@@ -1,7 +1,7 @@
 <mat-card>
   <mat-card-content>
-    <span class="product-name">{{ item.name | productName }}</span>
-    <span>{{ item.quantity }}</span>
+    <span class="product-name">{{ product.name | productName }}</span>
+    <span>{{ product.quantity }}</span>
     <button type="button"
             mat-icon-button
             (click)="openEditDialog()">
@@ -13,7 +13,7 @@
     </button>
     <button type="button"
             mat-icon-button
-            (click)="deleteItem()">
+            (click)="deleteProduct()">
       <mat-icon aria-hidden="false"
                 aria-label="Delete article"
                 color="warn"
