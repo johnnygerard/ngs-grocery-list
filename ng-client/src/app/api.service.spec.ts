@@ -12,7 +12,7 @@ describe('ApiService', () => {
   ];
 
   beforeEach(() => {
-    httpClientMock = jasmine.createSpyObj('HttpClient', ['get', 'post', 'delete']);
+    httpClientMock = jasmine.createSpyObj('HttpClient', ['get', 'post', 'patch', 'delete']);
     httpClientMock.get.withArgs(BASE_URL).and.returnValue(of(initialGroceryList));
   });
 
@@ -55,5 +55,25 @@ describe('ApiService', () => {
     // then
     expect(httpClientMock.delete).toHaveBeenCalledOnceWith(BASE_URL);
     expect(service.groceryList).toHaveSize(0);
+  });
+
+  it('should call updateQuantity', () => {
+    // given
+    const productIndex = 0;
+    const product = initialGroceryList[productIndex];
+    const quantity = product.quantity + 1;
+    const response: HttpResponse<void> = new HttpResponse({
+      status: HttpStatusCode.NoContent
+    });
+    const url = `${BASE_URL}/${product.id}?quantity=${quantity}`;
+    httpClientMock.patch.withArgs(url, null).and.returnValue(of(response));
+    service = new ApiService(httpClientMock);
+
+    // when
+    service.updateQuantity(product.id, quantity);
+
+    // then
+    expect(httpClientMock.patch).toHaveBeenCalledOnceWith(url, null);
+    expect(service.groceryList[productIndex].quantity).toEqual(quantity);
   });
 });
