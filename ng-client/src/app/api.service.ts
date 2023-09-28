@@ -1,9 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Product } from 'src/models/product.type';
 
-const BASE_URL = '/api/products';
+export const BASE_URL = '/api/products';
 
 @Injectable({
   providedIn: 'root'
@@ -12,13 +12,28 @@ export class ApiService {
   #groceryList: Product[] = [];
 
   constructor(private _http: HttpClient) {
-    this._http.get<Product[]>(BASE_URL).subscribe(
-      list => this.#groceryList = list
+    this.getAllProducts().subscribe(
+      products => this.#groceryList = products
     );
   }
 
   get groceryList(): Product[] {
     return this.#groceryList;
+  }
+
+  getAllProducts(): Observable<Product[]> {
+    return this._http.get<Product[]>(BASE_URL);
+  }
+
+  addProduct(name: string, quantity: number): void {
+    this._http
+      .post<HttpResponse<void>>(BASE_URL, { name, quantity })
+      .subscribe(response => {
+        const location = response.headers.get('Location');
+        if (!location) throw Error('Location header is missing');
+        const id = BigInt(location.substring(location.lastIndexOf('/') + 1));
+        this.#groceryList.push({ id, name, quantity });
+      });
   }
 
   getGroceryOptions(): Observable<string[]> {
@@ -29,12 +44,6 @@ export class ApiService {
     this._http
       .delete<void>(BASE_URL)
       .subscribe(() => this.#groceryList = []);
-  }
-
-  addProduct(name: string, quantity: number): void {
-    this._http
-      .post<bigint>(`${BASE_URL}/${name}?q=${quantity}`, null)
-      .subscribe(id => this.#groceryList.push({ id, name, quantity }));
   }
 
   deleteProduct(id: bigint): void {
