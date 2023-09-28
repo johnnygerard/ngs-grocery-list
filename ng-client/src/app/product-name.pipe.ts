@@ -1,10 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'groceryName',
+  name: 'productName',
   standalone: true
 })
-export class GroceryNamePipe implements PipeTransform {
+export class ProductNamePipe implements PipeTransform {
 
   // Example: transform('PEANUT_BUTTER') => 'Peanut Butter'
   transform(value: string): string {

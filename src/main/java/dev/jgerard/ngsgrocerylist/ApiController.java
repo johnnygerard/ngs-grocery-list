@@ -1,69 +1,68 @@
 package dev.jgerard.ngsgrocerylist;
 
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/api/grocery-items")
+@RequestMapping("/api/products")
 public class ApiController {
-    private final GroceryItemRepository repository;
+    private final ProductRepository repository;
 
-    public ApiController(GroceryItemRepository repository) {
+    public ApiController(ProductRepository repository) {
         this.repository = repository;
     }
 
     @GetMapping
-    public List<GroceryItem> getGroceryItems() {
+    public List<Product> getAllProducts() {
         return repository.findAll();
     }
 
-    @GetMapping("names")
-    public GroceryItemName[] getGroceryOptions() {
-        return GroceryItemName.values();
+    @PostMapping
+    public ResponseEntity<Void> addProduct(@RequestBody @Valid Product product) {
+        if (repository.count() > 99) throw new IllegalStateException("Grocery list is full");
+        // Ensure the product ID is auto-generated
+        if (product.getId() != null) throw new IllegalArgumentException("Product ID must be null");
+
+        repository.save(product);
+        URI location = URI.create("/api/products/" + product.getId());
+        return ResponseEntity.created(location).build();
     }
 
     @DeleteMapping
-    public void deleteGroceryItems() {
+    public ResponseEntity<Void> deleteAllProducts() {
         repository.deleteAll();
+        return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("{name}")
-    public Long addGroceryItem(
-            @PathVariable String name,
-            @RequestParam(name = "q", defaultValue = "1") int quantity) {
-        if (repository.count() >= 99) throw new IllegalStateException("Grocery list is full");
-
-        GroceryItemName itemName;
+    @PatchMapping("{productId}")
+    public ResponseEntity<Void> updateQuantity(
+        @PathVariable Long productId,
+        @RequestParam int quantity
+    ) {
+        Product product;
         try {
-            itemName = GroceryItemName.valueOf(name);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid grocery item name: " + name);
-        }
-        var item = new GroceryItem(itemName, quantity);
-        repository.save(item);
-        return item.getId();
-    }
-
-    @DeleteMapping("{id}")
-    public void deleteGroceryItem(@PathVariable Long id) {
-        if (!repository.existsById(id))
-            throw new NoSuchElementException("Grocery item #%d not found".formatted(id));
-        repository.deleteById(id);
-    }
-
-    @PatchMapping("{id}")
-    public void updateGroceryItemQuantity(
-            @PathVariable Long id,
-            @RequestParam(name = "q") int quantity) {
-        GroceryItem item = null;
-        try {
-            item = repository.findById(id).orElseThrow();
+            product = repository.findById(productId).orElseThrow();
         } catch (NoSuchElementException e) {
-            throw new NoSuchElementException("Grocery item #%d not found".formatted(id));
+            throw new NoSuchElementException("Product #%d not found".formatted(productId));
         }
-        item.setQuantity(quantity);
-        repository.save(item);
+        product.setQuantity(quantity);
+        repository.save(product);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("{productId}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+        repository.deleteById(productId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("names")
+    public ProductName[] getAllProductNames() {
+        return ProductName.values();
     }
 }

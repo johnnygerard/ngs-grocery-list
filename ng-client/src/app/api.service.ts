@@ -1,66 +1,76 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { GroceryItem } from 'src/models/grocery-item.type';
+import { Product } from 'src/models/product.type';
 
-const BASE_URL = '/api/grocery-items';
+export const BASE_URL = '/api/products';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  #groceryList: GroceryItem[] = [];
+  #groceryList: Product[] = [];
 
   constructor(private _http: HttpClient) {
-    this._http.get<GroceryItem[]>(BASE_URL).subscribe(
-      list => this.#groceryList = list
+    this.getAllProducts().subscribe(
+      products => this.#groceryList = products
     );
   }
 
-  get groceryList(): GroceryItem[] {
+  #findProduct(id: bigint): number {
+    const index = this.#groceryList.findIndex(product => product.id === id);
+
+    if (index < 0) throw Error(`Product #${id} not found`);
+    return index;
+  }
+
+  get groceryList(): Product[] {
     return this.#groceryList;
   }
 
-  getGroceryOptions(): Observable<string[]> {
-    return this._http.get<string[]>(`${BASE_URL}/names`);
+  getAllProducts(): Observable<Product[]> {
+    return this._http.get<Product[]>(BASE_URL);
   }
 
-  deleteGroceryList(): void {
+  addProduct(name: string, quantity: number): void {
+    this._http
+      .post<void>(BASE_URL, { name, quantity }, { observe: 'response' })
+      .subscribe(response => {
+        const location = response.headers.get('Location');
+        if (!location) throw Error('Location header is missing');
+        const id = BigInt(location.substring(location.lastIndexOf('/') + 1));
+
+        this.#groceryList.push({ id, name, quantity });
+      });
+  }
+
+  deleteAllProducts(): void {
     this._http
       .delete<void>(BASE_URL)
       .subscribe(() => this.#groceryList = []);
   }
 
-  addGroceryItem(name: string, quantity: number): void {
+  updateQuantity(productId: bigint, quantity: number): void {
     this._http
-      .post<bigint>(`${BASE_URL}/${name}?q=${quantity}`, null)
-      .subscribe(id => this.#groceryList.push({ id, name, quantity }));
-  }
-
-  deleteGroceryItem(id: bigint): void {
-    this._http
-      .delete<void>(`${BASE_URL}/${id}`)
+      .patch<void>(`${BASE_URL}/${productId}?quantity=${quantity}`, null)
       .subscribe(() => {
-        const index = this.#findGroceryItem(id);
-
-        this.#groceryList.splice(index, 1);
-      });
-  }
-
-  updateGroceryItemQuantity(id: bigint, quantity: number): void {
-    this._http
-      .patch<GroceryItem>(`${BASE_URL}/${id}?q=${quantity}`, null)
-      .subscribe(() => {
-        const index = this.#findGroceryItem(id);
+        const index = this.#findProduct(productId);
 
         this.#groceryList[index].quantity = quantity;
       });
   }
 
-  #findGroceryItem(id: bigint): number {
-    const index = this.#groceryList.findIndex(item => item.id === id);
+  deleteProduct(id: bigint): void {
+    this._http
+      .delete<void>(`${BASE_URL}/${id}`)
+      .subscribe(() => {
+        const index = this.#findProduct(id);
 
-    if (index < 0) throw Error(`Grocery item with id ${id} not found`);
-    return index;
+        this.#groceryList.splice(index, 1);
+      });
+  }
+
+  getAllProductNames(): Observable<string[]> {
+    return this._http.get<string[]>(`${BASE_URL}/names`);
   }
 }

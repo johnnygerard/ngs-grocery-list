@@ -4,12 +4,12 @@ import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
-import { GroceryItem } from 'src/models/grocery-item.type';
+import { Product } from 'src/models/product.type';
 import { MatInputModule } from '@angular/material/input';
-import { GroceryNamePipe } from '../grocery-name.pipe';
+import { ProductNamePipe } from '../product-name.pipe';
 
 @Component({
-  selector: 'app-edit-grocery-item-dialog',
+  selector: 'app-edit-product-dialog',
   standalone: true,
   imports: [
     CommonModule,
@@ -18,14 +18,14 @@ import { GroceryNamePipe } from '../grocery-name.pipe';
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    GroceryNamePipe,
+    ProductNamePipe,
   ],
-  templateUrl: './edit-grocery-item-dialog.component.html',
-  styleUrls: ['./edit-grocery-item-dialog.component.scss']
+  templateUrl: './edit-product-dialog.component.html',
+  styleUrls: ['./edit-product-dialog.component.scss']
 })
-export class EditGroceryItemDialogComponent {
+export class EditProductDialogComponent {
   initialQuantity = this.data.quantity;
   quantity = this.data.quantity;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: GroceryItem) { }
+  constructor(@Inject(MAT_DIALOG_DATA) public data: Product) { }
 }

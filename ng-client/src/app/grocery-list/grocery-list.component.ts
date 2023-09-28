@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../api.service';
-import { GroceryItemComponent } from '../grocery-item/grocery-item.component';
-import { GroceryItem } from 'src/models/grocery-item.type';
+import { ProductComponent } from '../product/product.component';
+import { Product } from 'src/models/product.type';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ClearListDialogComponent } from '../clear-list-dialog/clear-list-dialog.component';
@@ -12,7 +12,7 @@ import { ClearListDialogComponent } from '../clear-list-dialog/clear-list-dialog
   standalone: true,
   imports: [
     CommonModule,
-    GroceryItemComponent,
+    ProductComponent,
     MatButtonModule,
     MatDialogModule,
   ],
@@ -25,7 +25,7 @@ export class GroceryListComponent {
     private dialog: MatDialog,
   ) { }
 
-  get groceryList(): GroceryItem[] {
+  get groceryList(): Product[] {
     return this.api.groceryList;
   }
 
@@ -38,7 +38,7 @@ export class GroceryListComponent {
 
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result)
-        this.api.deleteGroceryList();
+        this.api.deleteAllProducts();
     });
   }
 }

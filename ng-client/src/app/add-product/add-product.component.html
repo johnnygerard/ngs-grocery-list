@@ -1,13 +1,13 @@
-<form (ngSubmit)="addGroceryItem(); form.resetForm({ quantity: 1 })"
+<form (ngSubmit)="addProduct(); form.resetForm({ quantity: 1 })"
   #form="ngForm">
   <mat-form-field>
     <mat-label>Article</mat-label>
     <mat-select [(ngModel)]="selectedOption"
-      name="groceryName"
+      name="productName"
       required>
       <mat-option>None</mat-option>
       <mat-option *ngFor="let option of options$ | async"
-        [value]="option">{{ option | groceryName }}</mat-option>
+        [value]="option">{{ option | productName }}</mat-option>
     </mat-select>
   </mat-form-field>
   <mat-form-field>

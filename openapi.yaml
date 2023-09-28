@@ -1,0 +1,136 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: Grocery List API
+  description: This is the OpenAPI document for the [ngs-grocery-list](https://github.com/johnnygerard/ngs-grocery-list) project.
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/jgerard.dev/ngs-grocery-list/1.0.0
+paths:
+  /products:
+    get:
+      summary: Fetch the entire list of grocery items.
+      operationId: getAllProducts
+      responses:
+        '200':
+          description: Full list of grocery items.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/product'
+    post:
+      summary: Add a new grocery item.
+      operationId: addProduct
+      requestBody:
+        description: New product to add to the grocery list
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Beef
+                quantity:
+                  $ref: '#/components/schemas/quantity'
+      responses:
+        '201':
+          description: New product successfully created
+          headers:
+            Location:
+              required: true
+              description: Created product URL
+              schema:
+                type: string
+                format: uri-reference
+                example: /api/products/3
+        '500':
+          description: Out of memory server exception
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: The product could not be added because of insufficient memory.
+    delete:
+      summary: Clear the entire grocery list.
+      operationId: deleteAllProducts
+      responses:
+        '204':
+          description: Grocery list successfully cleared.
+  /products/{productId}:
+    parameters:
+      - name: productId
+        in: path
+        required: true
+        schema:
+          type: integer
+          minimum: 0
+          example: 4
+    patch:
+      summary: Update a grocery item's quantity.
+      operationId: updateQuantity
+      parameters:
+        - name: quantity
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/quantity'
+      responses:
+        '204':
+          description: Product's quantity successfully updated
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Failed update: product not found'
+    delete:
+      summary: Remove a product from the grocery list.
+      operationId: deleteProduct
+      responses:
+        '204':
+          description: Product successfully deleted
+  /products/names:
+    get:
+      summary: Fetch the full list of product names.
+      operationId: getAllProductNames
+      responses:
+        '200':
+          description: Full list of product names
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example: '["Beef", "Apples", "Pasta"]'
+components:
+  schemas:
+    quantity:
+      type: integer
+      minimum: 1
+      maximum: 99
+      example: 2
+    product:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 0
+          example: 7
+        name:
+          type: string
+          example: Beef
+        quantity:
+          $ref: '#/components/schemas/quantity'
