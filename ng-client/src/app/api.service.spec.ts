@@ -76,4 +76,22 @@ describe('ApiService', () => {
     expect(httpClientMock.patch).toHaveBeenCalledOnceWith(url, null);
     expect(service.groceryList[productIndex].quantity).toEqual(quantity);
   });
+
+  it('should call deleteProduct', () => {
+    // given
+    const productId = initialGroceryList[0].id;
+    const response: HttpResponse<void> = new HttpResponse({
+      status: HttpStatusCode.NoContent
+    });
+    const url = `${BASE_URL}/${productId}`;
+    httpClientMock.delete.withArgs(url).and.returnValue(of(response));
+    service = new ApiService(httpClientMock);
+
+    // when
+    service.deleteProduct(productId);
+
+    // then
+    expect(httpClientMock.delete).toHaveBeenCalledOnceWith(url);
+    expect(service.groceryList.find(product => product.id === productId)).toBeUndefined();
+  });
 });
