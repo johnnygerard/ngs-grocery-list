@@ -24,7 +24,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrls: ['./add-product.component.scss']
 })
 export class AddProductComponent {
-  options$ = this.api.getGroceryOptions();
+  options$ = this.api.getAllProductNames();
   selectedOption = '';
   quantity = 1;
 

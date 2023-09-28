@@ -70,7 +70,7 @@ export class ApiService {
       });
   }
 
-  getGroceryOptions(): Observable<string[]> {
+  getAllProductNames(): Observable<string[]> {
     return this._http.get<string[]>(`${BASE_URL}/names`);
   }
 }
