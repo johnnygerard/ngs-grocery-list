@@ -33,14 +33,16 @@ describe('ApiService', () => {
       headers: new HttpHeaders({ Location: `${BASE_URL}/${productId}` }),
       status: HttpStatusCode.Created
     });
-    httpClientMock.post.withArgs(BASE_URL, body).and.returnValue(of(response));
+    // Using `any` because the `post` overload is not recognized by the compiler
+    const options: any = { observe: 'response' };
+    httpClientMock.post.withArgs(BASE_URL, body, options).and.returnValue(of(response));
     service = new ApiService(httpClientMock);
 
     // when
     service.addProduct(body.name, body.quantity);
 
     // then
-    expect(httpClientMock.post).toHaveBeenCalledOnceWith(BASE_URL, body);
+    expect(httpClientMock.post).toHaveBeenCalledOnceWith(BASE_URL, body, options);
     expect(service.groceryList.pop()).toEqual({ id: productId, ...body });
   });
 

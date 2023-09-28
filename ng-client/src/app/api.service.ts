@@ -1,4 +1,4 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Product } from 'src/models/product.type';
@@ -34,7 +34,7 @@ export class ApiService {
 
   addProduct(name: string, quantity: number): void {
     this._http
-      .post<HttpResponse<void>>(BASE_URL, { name, quantity })
+      .post<void>(BASE_URL, { name, quantity }, { observe: 'response' })
       .subscribe(response => {
         const location = response.headers.get('Location');
         if (!location) throw Error('Location header is missing');
