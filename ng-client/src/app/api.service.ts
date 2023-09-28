@@ -60,10 +60,6 @@ export class ApiService {
       });
   }
 
-  getGroceryOptions(): Observable<string[]> {
-    return this._http.get<string[]>(`${BASE_URL}/names`);
-  }
-
   deleteProduct(id: bigint): void {
     this._http
       .delete<void>(`${BASE_URL}/${id}`)
@@ -72,5 +68,9 @@ export class ApiService {
 
         this.#groceryList.splice(index, 1);
       });
+  }
+
+  getGroceryOptions(): Observable<string[]> {
+    return this._http.get<string[]>(`${BASE_URL}/names`);
   }
 }
