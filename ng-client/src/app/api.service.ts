@@ -17,6 +17,13 @@ export class ApiService {
     );
   }
 
+  #findProduct(id: bigint): number {
+    const index = this.#groceryList.findIndex(product => product.id === id);
+
+    if (index < 0) throw Error(`Product #${id} not found`);
+    return index;
+  }
+
   get groceryList(): Product[] {
     return this.#groceryList;
   }
@@ -32,6 +39,7 @@ export class ApiService {
         const location = response.headers.get('Location');
         if (!location) throw Error('Location header is missing');
         const id = BigInt(location.substring(location.lastIndexOf('/') + 1));
+
         this.#groceryList.push({ id, name, quantity });
       });
   }
@@ -40,6 +48,16 @@ export class ApiService {
     this._http
       .delete<void>(BASE_URL)
       .subscribe(() => this.#groceryList = []);
+  }
+
+  updateQuantity(productId: bigint, quantity: number): void {
+    this._http
+      .patch<void>(`${BASE_URL}/${productId}?quantity=${quantity}`, null)
+      .subscribe(() => {
+        const index = this.#findProduct(productId);
+
+        this.#groceryList[index].quantity = quantity;
+      });
   }
 
   getGroceryOptions(): Observable<string[]> {
@@ -54,22 +72,5 @@ export class ApiService {
 
         this.#groceryList.splice(index, 1);
       });
-  }
-
-  updateProductQuantity(id: bigint, quantity: number): void {
-    this._http
-      .patch<Product>(`${BASE_URL}/${id}?q=${quantity}`, null)
-      .subscribe(() => {
-        const index = this.#findProduct(id);
-
-        this.#groceryList[index].quantity = quantity;
-      });
-  }
-
-  #findProduct(id: bigint): number {
-    const index = this.#groceryList.findIndex(item => item.id === id);
-
-    if (index < 0) throw Error(`Product with id ${id} not found`);
-    return index;
   }
 }

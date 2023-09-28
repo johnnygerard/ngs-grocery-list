@@ -39,7 +39,7 @@ export class ProductComponent {
 
     dialogRef.afterClosed().subscribe(quantity => {
       if (typeof quantity === 'number')
-        this.api.updateProductQuantity(this.item.id, quantity);
+        this.api.updateQuantity(this.item.id, quantity);
     });
   }
 }
