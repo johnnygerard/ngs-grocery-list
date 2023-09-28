@@ -36,14 +36,14 @@ export class ApiService {
       });
   }
 
-  getGroceryOptions(): Observable<string[]> {
-    return this._http.get<string[]>(`${BASE_URL}/names`);
-  }
-
-  deleteGroceryList(): void {
+  deleteAllProducts(): void {
     this._http
       .delete<void>(BASE_URL)
       .subscribe(() => this.#groceryList = []);
+  }
+
+  getGroceryOptions(): Observable<string[]> {
+    return this._http.get<string[]>(`${BASE_URL}/names`);
   }
 
   deleteProduct(id: bigint): void {

@@ -38,7 +38,7 @@ export class GroceryListComponent {
 
     dialogRef.afterClosed().subscribe((result: boolean) => {
       if (result)
-        this.api.deleteGroceryList();
+        this.api.deleteAllProducts();
     });
   }
 }
