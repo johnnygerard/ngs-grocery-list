@@ -1,4 +1,4 @@
-package dev.jgerard.ngsgrocerylist;
+package dev.jgerard.ngsgrocerylist.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

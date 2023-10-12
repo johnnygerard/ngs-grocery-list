@@ -1,5 +1,8 @@
-package dev.jgerard.ngsgrocerylist;
+package dev.jgerard.ngsgrocerylist.controllers;
 
+import dev.jgerard.ngsgrocerylist.Product;
+import dev.jgerard.ngsgrocerylist.ProductName;
+import dev.jgerard.ngsgrocerylist.ProductRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
