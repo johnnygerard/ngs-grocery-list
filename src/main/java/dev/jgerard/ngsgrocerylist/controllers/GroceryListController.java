@@ -13,10 +13,10 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/products")
-public class ApiController {
+public class GroceryListController {
     private final ProductRepository repository;
 
-    public ApiController(ProductRepository repository) {
+    public GroceryListController(ProductRepository repository) {
         this.repository = repository;
     }
 

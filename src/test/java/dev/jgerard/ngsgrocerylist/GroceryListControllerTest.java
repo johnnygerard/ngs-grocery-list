@@ -2,7 +2,7 @@ package dev.jgerard.ngsgrocerylist;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.jgerard.ngsgrocerylist.controllers.ApiController;
+import dev.jgerard.ngsgrocerylist.controllers.GroceryListController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -20,8 +20,8 @@ import static org.springframework.test.util.AssertionErrors.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(ApiController.class)
-class ApiControllerTest {
+@WebMvcTest(GroceryListController.class)
+class GroceryListControllerTest {
     private static final String BASE_URL = "/api/products";
     @Autowired
     private MockMvc mockMvc;
