@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(GroceryListController.class)
-class GroceryListControllerTest {
+class GroceryListControllerTests {
     private static final String BASE_URL = "/api/products";
     @Autowired
     private MockMvc mockMvc;
