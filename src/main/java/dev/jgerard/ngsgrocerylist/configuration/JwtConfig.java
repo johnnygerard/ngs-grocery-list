@@ -1,4 +1,4 @@
-package dev.jgerard.ngsgrocerylist;
+package dev.jgerard.ngsgrocerylist.configuration;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import org.springframework.context.annotation.Bean;
