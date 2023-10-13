@@ -1,8 +1,8 @@
-package dev.jgerard.ngsgrocerylist;
+package dev.jgerard.ngsgrocerylist.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.jgerard.ngsgrocerylist.controllers.GroceryListController;
+import dev.jgerard.ngsgrocerylist.ProductName;
 import dev.jgerard.ngsgrocerylist.entities.Product;
 import dev.jgerard.ngsgrocerylist.repositories.ProductRepository;
 import org.junit.jupiter.api.Test;
