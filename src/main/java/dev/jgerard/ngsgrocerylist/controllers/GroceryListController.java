@@ -1,6 +1,6 @@
 package dev.jgerard.ngsgrocerylist.controllers;
 
-import dev.jgerard.ngsgrocerylist.Product;
+import dev.jgerard.ngsgrocerylist.entities.Product;
 import dev.jgerard.ngsgrocerylist.ProductName;
 import dev.jgerard.ngsgrocerylist.ProductRepository;
 import jakarta.validation.Valid;

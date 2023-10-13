@@ -1,5 +1,6 @@
-package dev.jgerard.ngsgrocerylist;
+package dev.jgerard.ngsgrocerylist.entities;
 
+import dev.jgerard.ngsgrocerylist.ProductName;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;

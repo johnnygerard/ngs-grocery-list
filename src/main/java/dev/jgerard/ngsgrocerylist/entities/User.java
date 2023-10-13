@@ -1,4 +1,4 @@
-package dev.jgerard.ngsgrocerylist;
+package dev.jgerard.ngsgrocerylist.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
