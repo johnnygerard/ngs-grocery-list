@@ -8,13 +8,30 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 
+import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-import java.security.SecureRandom;
+import java.security.NoSuchAlgorithmException;
 
 @Configuration
 public class JwtConfig {
-    private final SecretKey secretKey = makeSymmetricKey();
+    // Symmetric key for signing and verifying JWTs
+    private final SecretKey secretKey;
+
+    public JwtConfig() {
+        final String ALGORITHM = "HmacSHA256";
+        final int KEY_BIT_SIZE = 256;
+        KeyGenerator keyGenerator;
+
+        try {
+            keyGenerator = KeyGenerator.getInstance(ALGORITHM);
+        } catch (NoSuchAlgorithmException e) {
+            var message = "No Provider supports a KeyGeneratorSpi implementation for %s";
+            throw new RuntimeException(message.formatted(ALGORITHM), e);
+        }
+
+        keyGenerator.init(KEY_BIT_SIZE);
+        secretKey = keyGenerator.generateKey();
+    }
 
     @Bean
     public JwtDecoder jwtDecoder() {
@@ -24,14 +41,5 @@ public class JwtConfig {
     @Bean
     public JwtEncoder jwtEncoder() {
         return new NimbusJwtEncoder(new ImmutableSecret<>(secretKey));
-    }
-
-    private SecretKey makeSymmetricKey() {
-        final String ALGORITHM = "AES";
-        final int KEY_SIZE = 32; // 256 bits
-        final var key = new byte[KEY_SIZE];
-
-        new SecureRandom().nextBytes(key); // Fill array with random bytes
-        return new SecretKeySpec(key, ALGORITHM);
     }
 }
