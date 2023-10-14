@@ -15,7 +15,6 @@ public class User {
     @Pattern(regexp = "^\\w{1,32}$")
     private String username;
     @Column(nullable = false)
-    @Pattern(regexp = "^[\\x20-\\x7E]{8,256}$")
     private String password;
 
     public void setId(Long id) {
