@@ -1,7 +1,7 @@
 package dev.jgerard.ngsgrocerylist.controllers;
 
-import dev.jgerard.ngsgrocerylist.entities.Product;
 import dev.jgerard.ngsgrocerylist.ProductName;
+import dev.jgerard.ngsgrocerylist.entities.Product;
 import dev.jgerard.ngsgrocerylist.repositories.ProductRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
