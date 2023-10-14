@@ -1,6 +1,6 @@
 package dev.jgerard.ngsgrocerylist.controllers;
 
-import dev.jgerard.ngsgrocerylist.configuration.JwtConfig;
+import dev.jgerard.ngsgrocerylist.JwtBuilder;
 import dev.jgerard.ngsgrocerylist.entities.User;
 import dev.jgerard.ngsgrocerylist.repositories.UserRepository;
 import jakarta.validation.Valid;
@@ -20,12 +20,11 @@ public class UserAccountController {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private JwtBuilder jwtBuilder;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(
-        @RequestBody @Valid User user,
-        JwtConfig jwtConfig
-    ) {
+    public ResponseEntity<String> register(@RequestBody @Valid User user) {
         String username = user.getUsername();
         String password = user.getPassword();
         user.setId(null); // Enforce ID auto-generation
@@ -48,6 +47,6 @@ public class UserAccountController {
         }
 
         userRepository.save(user);
-        return ResponseEntity.ok(jwtConfig.generateJwt(username));
+        return ResponseEntity.ok(jwtBuilder.build(username).getTokenValue());
     }
 }
