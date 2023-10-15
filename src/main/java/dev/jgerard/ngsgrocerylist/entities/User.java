@@ -14,7 +14,6 @@ public class User {
     @GeneratedValue
     private Long id;
     @Column(unique = true, nullable = false)
-    @Pattern(regexp = "^\\w{1,32}$")
     private String username;
     @Column(nullable = false)
     private String password;

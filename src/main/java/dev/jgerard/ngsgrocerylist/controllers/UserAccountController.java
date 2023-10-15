@@ -3,14 +3,14 @@ package dev.jgerard.ngsgrocerylist.controllers;
 import dev.jgerard.ngsgrocerylist.JwtBuilder;
 import dev.jgerard.ngsgrocerylist.entities.User;
 import dev.jgerard.ngsgrocerylist.repositories.UserRepository;
-import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -24,17 +24,13 @@ public class UserAccountController {
     private JwtBuilder jwtBuilder;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody @Valid User user) {
-        String username = user.getUsername();
-        String password = user.getPassword();
-        user.setId(null); // Enforce ID auto-generation
-
-        // Validate password (8-256 printable ASCII characters)
-        String regex = "^[\\x20-\\x7E]{8,256}$";
-        if (!password.matches(regex)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("Malformed password (regex: %s)".formatted(regex));
-        }
+    public ResponseEntity<String> register(
+        @Pattern(regexp = "^\\w{1,32}$") @RequestParam String username,
+        @Pattern(regexp = "^[\\x20-\\x7E]{8,256}$") @RequestParam String password
+    ) {
+        // Create user
+        var user = new User();
+        user.setUsername(username);
 
         // Hash and set password
         String hash = passwordEncoder.encode(password);
