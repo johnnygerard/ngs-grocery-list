@@ -43,6 +43,6 @@ public class UserAccountController {
         }
 
         userRepository.save(user);
-        return ResponseEntity.ok(jwtBuilder.build(username).getTokenValue());
+        return ResponseEntity.ok(jwtBuilder.build(user.getId()).getTokenValue());
     }
 }

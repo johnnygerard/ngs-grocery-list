@@ -18,14 +18,14 @@ public class JwtBuilder {
     @Autowired
     private MacAlgorithm jwsAlgorithm;
 
-    public Jwt build(String username) {
+    public Jwt build(Long userId) {
         var now = Instant.now();
         var header = JwsHeader.with(jwsAlgorithm).build();
         var claims = JwtClaimsSet.builder()
             .issuer("self")
             .issuedAt(now)
             .expiresAt(now.plusSeconds(3600))
-            .subject(username)
+            .subject(userId.toString())
             .build();
         var parameters = JwtEncoderParameters.from(header, claims);
 
