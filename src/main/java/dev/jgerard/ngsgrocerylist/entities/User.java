@@ -4,7 +4,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.util.List;
 
 @Entity
 @Table(name = "end_user")
@@ -16,6 +20,9 @@ public class User {
     private String username;
     @Column(nullable = false)
     private String password;
+    @OneToMany
+    @JoinColumn(name = "user_id")
+    private List<Product> groceryList;
 
     public Long getId() {
         return id;
@@ -39,5 +46,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Product> getGroceryList() {
+        return groceryList;
+    }
+
+    public void setGroceryList(List<Product> groceryList) {
+        this.groceryList = groceryList;
     }
 }
