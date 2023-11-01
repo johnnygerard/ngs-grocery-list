@@ -1,16 +1,52 @@
-# For manual testing, requires IntelliJ IDEA Ultimate and a running instance of the application
-###
+### Register
+POST http://localhost:8080/api/register
+Content-Type: application/x-www-form-urlencoded
+
+username = {{$random.alphabetic(10)}} &
+password = {{$random.alphanumeric(10)}}
+
+> {%
+    import {assertEqual} from 'httpClient';
+
+    client.test('Register', () => {
+        assertEqual(200, response.status, 'Invalid status code');
+        assertEqual('text/plain', response.contentType.mimeType, 'Invalid content type');
+
+        // Store the JWT for authenticated requests.
+        client.global.set('jwt', response.body);
+    });
+%}
+
+### Add product
 POST http://localhost:8080/api/products
-Content-Type: application/json
 Authorization: Bearer {{jwt}}
+Content-Type: application/json
 
 {
   "name": "APPLES",
   "quantity": 5
 }
 
-###
-POST http://localhost:8080/api/register
-Content-Type: application/x-www-form-urlencoded
+> {%
+    import {assertEqual} from 'httpClient';
 
-username=john&password=password
+    client.test('Add product', () => {
+        assertEqual(201, response.status, 'Invalid status code');
+
+        const contentLength = response.headers.valueOf('Content-Length');
+        assertEqual('0', contentLength, 'Payload should be empty');
+    });
+%}
+
+### Get all products
+http://localhost:8080/api/products
+Authorization: Bearer {{jwt}}
+
+> {%
+    import {assertEqual} from 'httpClient';
+
+    client.test('Get all products', () => {
+        assertEqual(200, response.status, 'Invalid status code');
+        assertEqual('application/json', response.contentType.mimeType, 'Invalid content type');
+    });
+%}
