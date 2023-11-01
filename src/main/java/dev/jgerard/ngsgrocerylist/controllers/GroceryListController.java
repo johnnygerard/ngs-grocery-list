@@ -2,9 +2,12 @@ package dev.jgerard.ngsgrocerylist.controllers;
 
 import dev.jgerard.ngsgrocerylist.ProductName;
 import dev.jgerard.ngsgrocerylist.entities.Product;
+import dev.jgerard.ngsgrocerylist.entities.User;
 import dev.jgerard.ngsgrocerylist.repositories.ProductRepository;
+import dev.jgerard.ngsgrocerylist.repositories.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -23,23 +26,41 @@ import java.util.NoSuchElementException;
 @RequestMapping("/api/products")
 public class GroceryListController {
     private final ProductRepository repository;
+    private final UserRepository userRepository;
 
-    public GroceryListController(ProductRepository repository) {
+    public GroceryListController(
+        ProductRepository repository,
+        UserRepository userRepository
+    ) {
         this.repository = repository;
+        this.userRepository = userRepository;
+    }
+
+    private Long getUserId(Authentication authentication) {
+        return Long.valueOf(authentication.getName());
     }
 
     @GetMapping
-    public List<Product> getAllProducts() {
-        return repository.findAll();
+    public List<Product> getAllProducts(Authentication authentication) {
+        return userRepository
+            .findById(getUserId(authentication))
+            .orElseThrow()
+            .getGroceryList();
     }
 
     @PostMapping
-    public ResponseEntity<Void> addProduct(@RequestBody @Valid Product product) {
+    public ResponseEntity<Void> addProduct(
+        @RequestBody @Valid Product product,
+        Authentication authentication
+    ) {
         if (repository.count() > 99) throw new IllegalStateException("Grocery list is full");
         // Ensure the product ID is auto-generated
         if (product.getId() != null) throw new IllegalArgumentException("Product ID must be null");
 
         repository.save(product);
+        User user = userRepository.findById(getUserId(authentication)).orElseThrow();
+        user.getGroceryList().add(product);
+        userRepository.save(user);
         URI location = URI.create("/api/products/" + product.getId());
         return ResponseEntity.created(location).build();
     }
