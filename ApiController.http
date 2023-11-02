@@ -60,3 +60,29 @@ Authorization: Bearer {{jwt}}
         assertJsonBody([product1]);
     });
 %}
+
+### Delete all products
+DELETE {{BASE_URL}}/products
+Authorization: Bearer {{jwt}}
+
+> {%
+    import {assertEmptyBody, assertStatus} from 'httpClient';
+
+    client.test('Delete all products', () => {
+        assertStatus(204);
+        assertEmptyBody();
+    });
+%}
+
+### Get all products (empty)
+{{BASE_URL}}/products
+Authorization: Bearer {{jwt}}
+
+> {%
+    import {assertJsonBody, assertStatus} from 'httpClient';
+
+    client.test('Get all products', () => {
+        assertStatus(200);
+        assertJsonBody([]);
+    });
+%}
