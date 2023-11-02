@@ -11,9 +11,7 @@ export const assertStatus = statusCode => assertEqual(
 );
 
 export const assertEmptyBody = () => {
-    const contentLength = response.headers.valueOf('Content-Length');
-
-    client.assert(contentLength === '0', 'Non-empty body');
+    client.assert(response.body === null, 'Non-empty body');
 };
 
 export const assertContentType = contentType => assertEqual(
