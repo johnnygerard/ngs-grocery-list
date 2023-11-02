@@ -29,11 +29,19 @@ Content-Type: application/json
 {{product1}}
 
 > {%
-    import {assertStatus, assertEmptyBody} from 'httpClient';
+    import {assertNotNull, assertStatus, assertEmptyBody} from 'httpClient';
 
     client.test('Add product', () => {
         assertStatus(201);
         assertEmptyBody();
+
+        const location = response.headers.valueOf('Location');
+        assertNotNull(location, 'Location header is not set');
+
+        const result = /\/api\/products\/(\d+)/.exec(location);
+        assertNotNull(result, 'Invalid Location header');
+
+        client.global.set('product1_id', result[1]);
     });
 %}
 
@@ -46,7 +54,7 @@ Authorization: Bearer {{jwt}}
 
     client.test('Get all products', () => {
         const product1 = JSON.parse(client.global.get('product1'));
-        product1.id = response.body[0].id;
+        product1.id = parseInt(client.global.get('product1_id'));
 
         assertStatus(200);
         assertJsonBody([product1]);

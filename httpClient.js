@@ -32,6 +32,10 @@ Actual: ${actual}`;
     client.assert(isDeepEqual(expected, actual), message);
 };
 
+export const assertNotNull = (value, message) => {
+    client.assert(value !== null, message);
+};
+
 const isDeepEqual = (expected, actual) => {
     if (expected === actual) return true;
     if (typeof expected !== 'object' || typeof actual !== 'object')
