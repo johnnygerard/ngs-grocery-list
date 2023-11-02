@@ -42,13 +42,13 @@ http://localhost:8080/api/products
 Authorization: Bearer {{jwt}}
 
 > {%
-    import {assertEqualJson, assertStatus} from 'httpClient';
+    import {assertJsonBody, assertStatus} from 'httpClient';
 
     client.test('Get all products', () => {
         const product1 = JSON.parse(client.global.get('product1'));
         product1.id = response.body[0].id;
 
         assertStatus(200);
-        assertEqualJson(response.body, [product1]);
+        assertJsonBody([product1]);
     });
 %}

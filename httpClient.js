@@ -22,15 +22,14 @@ export const assertContentType = contentType => assertEqual(
     'Invalid content type'
 );
 
-export const assertEqualJson = (expected, actual) => {
-    assertContentType('application/json');
-
-    client.assert(
-        isDeepEqual(expected, actual),
-        `JSON values are not equal:
+export const assertJsonBody = expected => {
+    const actual = response.body;
+    const message = `JSON values are not equal:
 Expected: ${expected}
-Actual: ${actual}`
-    );
+Actual: ${actual}`;
+
+    assertContentType('application/json');
+    client.assert(isDeepEqual(expected, actual), message);
 };
 
 const isDeepEqual = (expected, actual) => {
