@@ -6,11 +6,11 @@ username = {{$random.alphabetic(10)}} &
 password = {{$random.alphanumeric(10)}}
 
 > {%
-    import {assertEqual} from 'httpClient';
+    import {assertContentType, assertStatus} from 'httpClient';
 
     client.test('Register', () => {
-        assertEqual(200, response.status, 'Invalid status code');
-        assertEqual('text/plain', response.contentType.mimeType, 'Invalid content type');
+        assertStatus(200);
+        assertContentType('text/plain');
 
         // Store the JWT for authenticated requests.
         client.global.set('jwt', response.body);
@@ -28,13 +28,11 @@ Content-Type: application/json
 }
 
 > {%
-    import {assertEqual} from 'httpClient';
+    import {assertStatus, assertEmptyBody} from 'httpClient';
 
     client.test('Add product', () => {
-        assertEqual(201, response.status, 'Invalid status code');
-
-        const contentLength = response.headers.valueOf('Content-Length');
-        assertEqual('0', contentLength, 'Payload should be empty');
+        assertStatus(201);
+        assertEmptyBody();
     });
 %}
 
@@ -43,10 +41,10 @@ http://localhost:8080/api/products
 Authorization: Bearer {{jwt}}
 
 > {%
-    import {assertEqual} from 'httpClient';
+    import {assertContentType, assertStatus} from 'httpClient';
 
     client.test('Get all products', () => {
-        assertEqual(200, response.status, 'Invalid status code');
-        assertEqual('application/json', response.contentType.mimeType, 'Invalid content type');
+        assertStatus(200);
+        assertContentType('application/json');
     });
 %}
