@@ -10,10 +10,11 @@ export const assertStatus = statusCode => assertEqual(
     'Invalid status code'
 );
 
-export const assertEmptyBody = () => client.assert(
-    '0' === response.headers.valueOf('Content-Length'),
-    'Non-empty body'
-);
+export const assertEmptyBody = () => {
+    const contentLength = response.headers.valueOf('Content-Length');
+
+    client.assert(contentLength === '0', 'Non-empty body');
+};
 
 export const assertContentType = contentType => assertEqual(
     contentType,
