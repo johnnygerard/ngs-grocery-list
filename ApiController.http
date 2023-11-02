@@ -18,14 +18,15 @@ password = {{$random.alphanumeric(10)}}
 %}
 
 ### Add product
+< {%
+    client.global.set('product1', '{"name": "APPLES","quantity": 5}');
+%}
+
 POST http://localhost:8080/api/products
 Authorization: Bearer {{jwt}}
 Content-Type: application/json
 
-{
-  "name": "APPLES",
-  "quantity": 5
-}
+{{product1}}
 
 > {%
     import {assertStatus, assertEmptyBody} from 'httpClient';
