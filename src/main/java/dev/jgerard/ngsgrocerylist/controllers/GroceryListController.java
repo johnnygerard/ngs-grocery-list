@@ -42,10 +42,10 @@ public class GroceryListController {
 
     @GetMapping
     public List<Product> getAllProducts(Authentication authentication) {
-        return userRepository
+        User user = userRepository
             .findById(getUserId(authentication))
-            .orElseThrow()
-            .getGroceryList();
+            .orElseThrow();
+        return repository.findAllByUser(user);
     }
 
     @PostMapping
@@ -57,10 +57,9 @@ public class GroceryListController {
         // Ensure the product ID is auto-generated
         if (product.getId() != null) throw new IllegalArgumentException("Product ID must be null");
 
-        repository.save(product);
         User user = userRepository.findById(getUserId(authentication)).orElseThrow();
-        user.getGroceryList().add(product);
-        userRepository.save(user);
+        product.setUser(user);
+        repository.save(product);
         URI location = URI.create("/api/products/" + product.getId());
         return ResponseEntity.created(location).build();
     }
