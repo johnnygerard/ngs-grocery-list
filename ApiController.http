@@ -1,3 +1,5 @@
+# This file contains integration tests for the backend (API + database).
+
 ### Register
 POST {{BASE_URL}}/register
 Content-Type: application/x-www-form-urlencoded
