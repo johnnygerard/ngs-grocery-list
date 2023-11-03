@@ -25,14 +25,14 @@ import java.util.NoSuchElementException;
 @RestController
 @RequestMapping("/api/products")
 public class GroceryListController {
-    private final ProductRepository repository;
+    private final ProductRepository productRepository;
     private final UserRepository userRepository;
 
     public GroceryListController(
-        ProductRepository repository,
+        ProductRepository productRepository,
         UserRepository userRepository
     ) {
-        this.repository = repository;
+        this.productRepository = productRepository;
         this.userRepository = userRepository;
     }
 
@@ -45,7 +45,7 @@ public class GroceryListController {
         User user = userRepository
             .findById(getUserId(authentication))
             .orElseThrow();
-        return repository.findAllByUser(user);
+        return productRepository.findAllByUser(user);
     }
 
     @PostMapping
@@ -53,20 +53,20 @@ public class GroceryListController {
         @RequestBody @Valid Product product,
         Authentication authentication
     ) {
-        if (repository.count() > 99) throw new IllegalStateException("Grocery list is full");
+        if (productRepository.count() > 99) throw new IllegalStateException("Grocery list is full");
         // Ensure the product ID is auto-generated
         if (product.getId() != null) throw new IllegalArgumentException("Product ID must be null");
 
         User user = userRepository.findById(getUserId(authentication)).orElseThrow();
         product.setUser(user);
-        repository.save(product);
+        productRepository.save(product);
         URI location = URI.create("/api/products/" + product.getId());
         return ResponseEntity.created(location).build();
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteAllProducts() {
-        repository.deleteAll();
+        productRepository.deleteAll();
         return ResponseEntity.noContent().build();
     }
 
@@ -77,18 +77,18 @@ public class GroceryListController {
     ) {
         Product product;
         try {
-            product = repository.findById(productId).orElseThrow();
+            product = productRepository.findById(productId).orElseThrow();
         } catch (NoSuchElementException e) {
             throw new NoSuchElementException("Product #%d not found".formatted(productId));
         }
         product.setQuantity(quantity);
-        repository.save(product);
+        productRepository.save(product);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("{productId}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
-        repository.deleteById(productId);
+        productRepository.deleteById(productId);
         return ResponseEntity.noContent().build();
     }
 
