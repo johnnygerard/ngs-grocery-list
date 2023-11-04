@@ -65,8 +65,9 @@ public class GroceryListController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteAllProducts() {
-        productRepository.deleteAll();
+    public ResponseEntity<Void> deleteAllProducts(Authentication authentication) {
+        User user = userRepository.findById(getUserId(authentication)).orElseThrow();
+        productRepository.deleteAllByUser(user);
         return ResponseEntity.noContent().build();
     }
 
