@@ -8,6 +8,7 @@ import dev.jgerard.ngsgrocerylist.repositories.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -24,6 +25,7 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/products")
+@Transactional
 public class GroceryListController {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
@@ -41,6 +43,7 @@ public class GroceryListController {
     }
 
     @GetMapping
+    @Transactional(readOnly = true)
     public List<Product> getAllProducts(Authentication authentication) {
         User user = userRepository
             .findById(getUserId(authentication))
@@ -94,6 +97,7 @@ public class GroceryListController {
     }
 
     @GetMapping("names")
+    @Transactional(readOnly = true)
     public ProductName[] getAllProductNames() {
         return ProductName.values();
     }
