@@ -67,7 +67,7 @@ paths:
             text/plain:
               schema:
                 type: string
-                description: JWT
+                format: jwt
         '409':
           description: Username conflict
           content:
