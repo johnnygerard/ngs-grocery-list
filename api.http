@@ -1,5 +1,12 @@
 # This file contains integration tests for the backend (API + database).
 
+### Initialize global variables (using a dummy request)
+< {%
+    client.global.set('product1', '{"name": "APPLES","quantity": 5}');
+    client.global.set('product2', '{"name": "BEEF","quantity": 10}');
+%}
+    {{BASE_URL}}
+
 ### Register
 POST {{BASE_URL}}/register
 Content-Type: application/x-www-form-urlencoded
@@ -19,11 +26,18 @@ password = {{$random.alphanumeric(10)}}
     });
 %}
 
-### Add product
-< {%
-    client.global.set('product1', '{"name": "APPLES","quantity": 5}');
+### Register another user
+POST {{BASE_URL}}/register
+Content-Type: application/x-www-form-urlencoded
+
+username = {{$random.alphabetic(10)}} &
+password = {{$random.alphanumeric(10)}}
+
+> {%
+    client.global.set('jwt2', response.body);
 %}
 
+### Add product
 POST {{BASE_URL}}/products
 Authorization: Bearer {{jwt}}
 Content-Type: application/json
@@ -86,5 +100,73 @@ Authorization: Bearer {{jwt}}
     client.test('Get all products', () => {
         assertStatus(200);
         assertJsonBody([]);
+    });
+%}
+
+### Add product (setup for next test)
+POST {{BASE_URL}}/products
+Authorization: Bearer {{jwt}}
+Content-Type: application/json
+
+{{product1}}
+
+> {%
+    const location = response.headers.valueOf('Location');
+    const result = /\/api\/products\/(\d+)/.exec(location);
+    client.global.set('product1_id', result[1]);
+%}
+
+### Delete one product (unauthorized)
+DELETE {{BASE_URL}}/products/{{product1_id}}
+Authorization: Bearer {{jwt2}}
+
+> {%
+    import {assertEmptyBody, assertStatus} from 'httpClient';
+
+    client.test('Delete one product (unauthorized)', () => {
+        assertStatus(404);
+        assertEmptyBody();
+    });
+%}
+
+### Delete one product
+DELETE {{BASE_URL}}/products/{{product1_id}}
+Authorization: Bearer {{jwt}}
+
+> {%
+    import {assertEmptyBody, assertStatus} from 'httpClient';
+
+    client.test('Delete one product', () => {
+        assertStatus(204);
+        assertEmptyBody();
+    });
+%}
+
+### Add product (setup for next test)
+POST {{BASE_URL}}/products
+Authorization: Bearer {{jwt}}
+Content-Type: application/json
+
+{{product1}}
+
+> {%
+    const location = response.headers.valueOf('Location');
+    const result = /\/api\/products\/(\d+)/.exec(location);
+    client.global.set('product1_id', result[1]);
+%}
+
+### Update a product's quantity
+PATCH {{BASE_URL}}/products/{{product1_id}}
+Authorization: Bearer {{jwt}}
+Content-Type: application/x-www-form-urlencoded
+
+quantity = {{product1_quantity}}
+
+> {%
+    import {assertEmptyBody, assertStatus} from 'httpClient';
+
+    client.test('Update a product\'s quantity', () => {
+        assertStatus(204);
+        assertEmptyBody();
     });
 %}

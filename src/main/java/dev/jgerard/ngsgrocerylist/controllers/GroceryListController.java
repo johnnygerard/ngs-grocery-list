@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/products")
@@ -77,21 +76,27 @@ public class GroceryListController {
     @PatchMapping("{productId}")
     public ResponseEntity<Void> updateQuantity(
         @PathVariable Long productId,
-        @RequestParam int quantity
+        @RequestParam int quantity,
+        Authentication authentication
     ) {
-        Product product;
-        try {
-            product = productRepository.findById(productId).orElseThrow();
-        } catch (NoSuchElementException e) {
-            throw new NoSuchElementException("Product #%d not found".formatted(productId));
-        }
+        Product product = productRepository.findById(productId).orElse(null);
+        if (product == null || !product.getUser().getId().equals(getUserId(authentication)))
+            return ResponseEntity.notFound().build();
+
         product.setQuantity(quantity);
         productRepository.save(product);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("{productId}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long productId) {
+    public ResponseEntity<Void> deleteProduct(
+        @PathVariable Long productId,
+        Authentication authentication
+    ) {
+        Product product = productRepository.findById(productId).orElse(null);
+        if (product == null || !product.getUser().getId().equals(getUserId(authentication)))
+            return ResponseEntity.notFound().build();
+
         productRepository.deleteById(productId);
         return ResponseEntity.noContent().build();
     }
