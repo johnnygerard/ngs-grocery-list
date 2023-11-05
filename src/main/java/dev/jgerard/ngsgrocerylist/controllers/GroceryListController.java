@@ -37,10 +37,6 @@ public class GroceryListController {
         this.userRepository = userRepository;
     }
 
-    private Long getUserId(Authentication authentication) {
-        return Long.valueOf(authentication.getName());
-    }
-
     @GetMapping
     @Transactional(readOnly = true)
     public List<Product> getAllProducts(Authentication authentication) {
@@ -105,5 +101,9 @@ public class GroceryListController {
     @Transactional(readOnly = true)
     public ProductName[] getAllProductNames() {
         return ProductName.values();
+    }
+
+    private Long getUserId(Authentication authentication) {
+        return Long.valueOf(authentication.getName());
     }
 }
