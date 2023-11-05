@@ -18,14 +18,7 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  example: Alice
-                password:
-                  type: string
-                  example: 2as2_#dd8
+              $ref: '#/components/schemas/credentials'
       responses:
         '200':
           description: User successfully logged in
@@ -52,14 +45,7 @@ paths:
         content:
           application/x-www-form-urlencoded:
             schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  example: Alice
-                password:
-                  type: string
-                  example: 2as2_#dd8
+                $ref: '#/components/schemas/credentials'
       responses:
         '200':
           description: User successfully registered
@@ -184,6 +170,15 @@ paths:
                 example: '["Beef", "Apples", "Pasta"]'
 components:
   schemas:
+    credentials:
+      type: object
+      properties:
+        username:
+          type: string
+          example: Alice
+        password:
+          type: string
+          example: 2as2_#dd8
     quantity:
       type: integer
       minimum: 1
