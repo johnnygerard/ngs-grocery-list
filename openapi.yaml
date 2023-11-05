@@ -8,6 +8,40 @@ servers:
   - description: SwaggerHub API Auto Mocking
     url: https://virtserver.swaggerhub.com/jgerard.dev/ngs-grocery-list/1.0.0
 paths:
+  /login:
+    post:
+      summary: Login an existing user.
+      operationId: loginUser
+      requestBody:
+        description: User to login
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: Alice
+                password:
+                  type: string
+                  example: 2as2_#dd8
+      responses:
+        '200':
+          description: User successfully logged in
+          content:
+            text/plain:
+              schema:
+                type: string
+                format: jwt
+        '401':
+          description: Invalid credentials
+          content:
+            text/plain:
+              schema:
+                type: string
+                description: Error message
+                example: 'Invalid username/password combination'
   /register:
     post:
       summary: Register a new user.
