@@ -24,7 +24,7 @@ public class UserAccountController {
     private JwtBuilder jwtBuilder;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(
+    public ResponseEntity<String> registerUser(
         @Pattern(regexp = "^\\w{1,32}$") @RequestParam String username,
         @Pattern(regexp = "^[\\x20-\\x7E]{8,256}$") @RequestParam String password
     ) {
