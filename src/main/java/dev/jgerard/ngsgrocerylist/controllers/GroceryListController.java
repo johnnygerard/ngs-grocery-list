@@ -76,7 +76,7 @@ public class GroceryListController {
         Authentication authentication
     ) {
         Product product = productRepository.findById(productId).orElse(null);
-        if (product == null || !product.getUser().getId().equals(getUserId(authentication)))
+        if (userDoesNotOwnProduct(authentication, product))
             return ResponseEntity.notFound().build();
 
         product.setQuantity(quantity);
@@ -90,7 +90,7 @@ public class GroceryListController {
         Authentication authentication
     ) {
         Product product = productRepository.findById(productId).orElse(null);
-        if (product == null || !product.getUser().getId().equals(getUserId(authentication)))
+        if (userDoesNotOwnProduct(authentication, product))
             return ResponseEntity.notFound().build();
 
         productRepository.deleteById(productId);
@@ -105,5 +105,9 @@ public class GroceryListController {
 
     private Long getUserId(Authentication authentication) {
         return Long.valueOf(authentication.getName());
+    }
+
+    private boolean userDoesNotOwnProduct(Authentication authentication, Product product) {
+        return product == null || !product.getUser().getId().equals(getUserId(authentication));
     }
 }
