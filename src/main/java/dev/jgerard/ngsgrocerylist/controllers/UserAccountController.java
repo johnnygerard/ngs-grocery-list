@@ -45,4 +45,24 @@ public class UserAccountController {
         userRepository.save(user);
         return ResponseEntity.ok(jwtBuilder.build(user.getId()).getTokenValue());
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> loginUser(
+        @RequestParam String username,
+        @RequestParam String password
+    ) {
+        User user = userRepository.findByUsername(username).orElse(null);
+
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+            return ResponseEntity.ok(jwtBuilder.build(user.getId()).getTokenValue());
+        }
+
+        if (user == null) {
+            // Hash password to prevent timing attacks
+            passwordEncoder.encode(password);
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body("Invalid username or password");
+    }
 }
