@@ -35,21 +35,6 @@ class GroceryListControllerTests {
     @MockBean
     private ProductRepository repository;
 
-    // Helper method to create a product
-    private Product createProduct(Long id, ProductName name, int quantity) {
-        Product product = new Product();
-        product.setId(id);
-        product.setName(name);
-        product.setQuantity(quantity);
-        return product;
-    }
-
-    // Helper method to serialize an object to JSON
-    private String serialize(Object object) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(object);
-    }
-
     @Test
     void getAllProducts() throws Exception {
         // given
@@ -144,5 +129,20 @@ class GroceryListControllerTests {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(content().json(serialize(ProductName.values())));
+    }
+
+    // Helper method to create a product
+    private Product createProduct(Long id, ProductName name, int quantity) {
+        Product product = new Product();
+        product.setId(id);
+        product.setName(name);
+        product.setQuantity(quantity);
+        return product;
+    }
+
+    // Helper method to serialize an object to JSON
+    private String serialize(Object object) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(object);
     }
 }
