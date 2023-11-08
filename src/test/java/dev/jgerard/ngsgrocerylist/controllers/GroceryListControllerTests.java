@@ -5,11 +5,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.jgerard.ngsgrocerylist.ProductName;
 import dev.jgerard.ngsgrocerylist.entities.Product;
 import dev.jgerard.ngsgrocerylist.repositories.ProductRepository;
+import dev.jgerard.ngsgrocerylist.repositories.UserRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -17,7 +22,9 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.util.AssertionErrors.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -34,6 +41,24 @@ class GroceryListControllerTests {
     private MockMvc mockMvc;
     @MockBean
     private ProductRepository productRepository;
+    @MockBean
+    private UserRepository userRepository;
+
+    @BeforeAll
+    static void setup() {
+        // Mock the Authentication object with a user ID
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        var authentication = mock(Authentication.class);
+        when(authentication.getName()).thenReturn("2");
+
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        // Mock the UserRepository to return a user with the ID
+        // that was returned by the Authentication object
+        var user = mock(dev.jgerard.ngsgrocerylist.entities.User.class);
+        when(user.getId()).thenReturn(2L);
+    }
 
     @Test
     void getAllProducts() throws Exception {
