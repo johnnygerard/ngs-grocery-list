@@ -33,7 +33,7 @@ class GroceryListControllerTests {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private ProductRepository repository;
+    private ProductRepository productRepository;
 
     @Test
     void getAllProducts() throws Exception {
@@ -43,7 +43,7 @@ class GroceryListControllerTests {
             createProduct(2L, ProductName.BANANAS, 20),
             createProduct(3L, ProductName.CARROTS, 30)
         );
-        given(repository.findAll()).willReturn(productList);
+        given(productRepository.findAll()).willReturn(productList);
 
         // when
         mockMvc.perform(get(BASE_URL))
@@ -52,7 +52,7 @@ class GroceryListControllerTests {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(content().json(serialize(productList)));
 
-        verify(repository).findAll();
+        verify(productRepository).findAll();
     }
 
     @Test
@@ -62,7 +62,7 @@ class GroceryListControllerTests {
         var product = new Product();
         product.setName(ProductName.APPLES);
         product.setQuantity(10);
-        given(repository.save(any(Product.class))).willAnswer(invocation -> {
+        given(productRepository.save(any(Product.class))).willAnswer(invocation -> {
             Product p = invocation.getArgument(0);
             p.setId(productId); // Simulate auto-generated ID
             return p;
@@ -76,7 +76,7 @@ class GroceryListControllerTests {
             .andExpect(status().isCreated())
             .andExpect(header().string("Location", "%s/%d".formatted(BASE_URL, productId)));
 
-        verify(repository).save(any(Product.class));
+        verify(productRepository).save(any(Product.class));
     }
 
     @Test
@@ -86,7 +86,7 @@ class GroceryListControllerTests {
             // then
             .andExpect(status().isNoContent());
 
-        verify(repository).deleteAll();
+        verify(productRepository).deleteAll();
     }
 
     @Test
@@ -95,7 +95,7 @@ class GroceryListControllerTests {
         Long productId = 3L;
         int quantity = 10;
         Product product = createProduct(productId, ProductName.APPLES, 20);
-        given(repository.findById(productId))
+        given(productRepository.findById(productId))
             .willReturn(Optional.of(product));
 
         // when
@@ -104,7 +104,7 @@ class GroceryListControllerTests {
             // then
             .andExpect(status().isNoContent());
 
-        verify(repository).save(any(Product.class));
+        verify(productRepository).save(any(Product.class));
         assertEquals("Quantity update failed", quantity, product.getQuantity());
     }
 
@@ -118,7 +118,7 @@ class GroceryListControllerTests {
             // then
             .andExpect(status().isNoContent());
 
-        verify(repository).deleteById(productId);
+        verify(productRepository).deleteById(productId);
     }
 
     @Test
