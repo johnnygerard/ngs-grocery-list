@@ -46,7 +46,7 @@ class ApiIT {
     private static final String CREDENTIALS_1 = MAIN_USER + ",pdH8W8zL";
     private static final String CREDENTIALS_2 = SECONDARY_USER + ",P5uQ9iHH";
     private static final String CREDENTIALS_TEMPLATE = "username=%s&password=%s";
-    private static final List<String> jwts = new ArrayList<>();
+    private static final List<String> jwtList = new ArrayList<>();
     private static final List<Product> mainGroceryList;
     private static final List<Product> secondaryGroceryList;
 
@@ -96,7 +96,7 @@ class ApiIT {
                 response.getHeaders().getContentType())
             );
 
-            jwts.add(response.getBody());
+            jwtList.add(response.getBody());
         }
 
         @Test
@@ -107,7 +107,7 @@ class ApiIT {
 
             for (int i = 0; i < groceryLists.size(); i++) {
                 List<Product> groceryList = groceryLists.get(i);
-                String jwt = jwts.get(i);
+                String jwt = jwtList.get(i);
 
                 for (Product product : groceryList) {
                     var request = RequestEntity.post(BASE_URL)
