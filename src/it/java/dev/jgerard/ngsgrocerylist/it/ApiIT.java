@@ -143,6 +143,27 @@ class ApiIT {
     @Nested
     @Order(2)
     class CoreTests {
+        @Test
+        void deleteAllProducts() throws JSONException {
+            var request = RequestEntity.delete(BASE_URL)
+                .header("Authorization", "Bearer " + getJwt())
+                .build();
+            var response = restTemplate.exchange(request, Void.class);
 
+            assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+            assertNull(response.getBody());
+            JSONAssert.assertEquals("[]", getGroceryList(), true);
+        }
+
+        private String getJwt() {
+            return jwtList.get(0);
+        }
+
+        private String getGroceryList() {
+            var request = RequestEntity.get(BASE_URL)
+                .header("Authorization", "Bearer " + getJwt())
+                .build();
+            return restTemplate.exchange(request, String.class).getBody();
+        }
     }
 }
