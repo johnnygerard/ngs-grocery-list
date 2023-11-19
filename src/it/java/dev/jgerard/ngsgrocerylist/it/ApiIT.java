@@ -12,8 +12,6 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestClassOrder;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +22,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -38,30 +35,21 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 class ApiIT {
     private static final String BASE_URL = "/api/products";
-    // Most tests will target the main user.
-    private static final String MAIN_USER = "Alice";
-    // The main reason for having a secondary user is to
-    // ensure grocery lists are user-specific.
-    private static final String SECONDARY_USER = "Bob";
-    private static final String CREDENTIALS_1 = MAIN_USER + ",pdH8W8zL";
-    private static final String CREDENTIALS_2 = SECONDARY_USER + ",P5uQ9iHH";
-    private static final String CREDENTIALS_TEMPLATE = "username=%s&password=%s";
-    private static final List<String> jwtList = new ArrayList<>();
-    private static final List<Product> mainGroceryList;
-    private static final List<Product> secondaryGroceryList;
-
-    static {
-        mainGroceryList = List.of(
+    private static final List<TestUser> testUsers = List.of(
+        new TestUser("Alice", "pdH8W8zL", List.of(
             makeProduct(ProductName.APPLES, 3),
             makeProduct(ProductName.BANANAS, 2),
             makeProduct(ProductName.CARROTS, 1)
-        );
-
-        secondaryGroceryList = List.of(
+        )),
+        new TestUser("Bob", "P5uQ9iHH", List.of(
             makeProduct(ProductName.BREAD, 1),
             makeProduct(ProductName.MILK, 10)
-        );
-    }
+        )),
+        new TestUser("Carol", "8zLpdH8W", List.of(
+            makeProduct(ProductName.CARROTS, 2),
+            makeProduct(ProductName.EGGS, 12)
+        ))
+    );
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -79,39 +67,37 @@ class ApiIT {
     @Order(1)
     @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
     class SetupTests {
-        @ParameterizedTest
+        @Test
         @Order(1)
-        @CsvSource({
-            CREDENTIALS_1,
-            CREDENTIALS_2
-        })
-        void registerUser(String username, String password) {
-            var request = RequestEntity.post("/api/register")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(CREDENTIALS_TEMPLATE.formatted(username, password));
-            var response = restTemplate.exchange(request, String.class);
+        void registerUser() {
+            for (TestUser testUser : testUsers) {
+                var request = RequestEntity.post("/api/register")
+                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                    .body(testUser.getCredentials());
+                var response = restTemplate.exchange(request, String.class);
 
-            assertEquals(HttpStatus.OK, response.getStatusCode());
-            assertTrue(MediaType.TEXT_PLAIN.equalsTypeAndSubtype(
-                response.getHeaders().getContentType())
-            );
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                assertTrue(MediaType.TEXT_PLAIN.equalsTypeAndSubtype(
+                    response.getHeaders().getContentType())
+                );
 
-            jwtList.add(response.getBody());
+                String jwt = response.getBody();
+                assertNotNull(jwt);
+                testUser.getJwtHeader().set("Authorization", "Bearer " + jwt);
+            }
         }
 
         @Test
         @Order(2)
         void addProducts() throws JsonProcessingException, JSONException {
             var locationPattern = Pattern.compile(BASE_URL + "/(\\d+)");
-            var groceryLists = List.of(mainGroceryList, secondaryGroceryList);
 
-            for (int i = 0; i < groceryLists.size(); i++) {
-                List<Product> groceryList = groceryLists.get(i);
-                String jwt = jwtList.get(i);
+            for (TestUser testUser : testUsers) {
+                List<Product> groceryList = testUser.getGroceryList();
 
                 for (Product product : groceryList) {
                     var request = RequestEntity.post(BASE_URL)
-                        .header("Authorization", "Bearer " + jwt)
+                        .headers(testUser.getJwtHeader())
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(product);
                     var response = restTemplate.exchange(request, Void.class);
@@ -126,7 +112,7 @@ class ApiIT {
                 }
 
                 var request = RequestEntity.get(BASE_URL)
-                    .header("Authorization", "Bearer " + jwt)
+                    .headers(testUser.getJwtHeader())
                     .build();
                 var response = restTemplate.exchange(request, String.class);
                 assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -145,23 +131,25 @@ class ApiIT {
     class CoreTests {
         @Test
         void deleteAllProducts() throws JSONException {
+            var testUser = getRandomTestUser();
             var request = RequestEntity.delete(BASE_URL)
-                .header("Authorization", "Bearer " + getJwt())
+                .headers(testUser.getJwtHeader())
                 .build();
             var response = restTemplate.exchange(request, Void.class);
 
             assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
             assertNull(response.getBody());
-            JSONAssert.assertEquals("[]", getGroceryList(), true);
+            JSONAssert.assertEquals("[]", getActualGroceryList(testUser), true);
         }
 
-        private String getJwt() {
-            return jwtList.get(0);
+        private TestUser getRandomTestUser() {
+            var index = (int) (Math.random() * testUsers.size());
+            return testUsers.get(index);
         }
 
-        private String getGroceryList() {
+        private String getActualGroceryList(TestUser testUser) {
             var request = RequestEntity.get(BASE_URL)
-                .header("Authorization", "Bearer " + getJwt())
+                .headers(testUser.getJwtHeader())
                 .build();
             return restTemplate.exchange(request, String.class).getBody();
         }
