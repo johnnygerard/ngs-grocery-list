@@ -128,8 +128,10 @@ class ApiIT {
 
     @Nested
     @Order(2)
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
     class CoreTests {
         @Test
+        @Order(1)
         void deleteAllProducts() throws JSONException {
             var testUser = getRandomTestUser();
             var request = RequestEntity.delete(BASE_URL)
@@ -142,9 +144,38 @@ class ApiIT {
             JSONAssert.assertEquals("[]", getActualGroceryList(testUser), true);
         }
 
+        @Test
+        @Order(2)
+        void deleteProduct() throws JSONException, JsonProcessingException {
+            TestUser testUser = getRandomTestUser();
+            Long productId = getRandomProductId(testUser);
+            var request = RequestEntity.delete(BASE_URL + "/" + productId)
+                .headers(testUser.getJwtHeader())
+                .build();
+            var response = restTemplate.exchange(request, Void.class);
+
+            assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+            assertNull(response.getBody());
+            JSONAssert.assertEquals(
+                objectMapper.writeValueAsString(
+                    testUser.getGroceryList().stream()
+                        .filter(product -> !product.getId().equals(productId))
+                        .toList()
+                ),
+                getActualGroceryList(testUser),
+                JSONCompareMode.NON_EXTENSIBLE
+            );
+        }
+
         private TestUser getRandomTestUser() {
             var index = (int) (Math.random() * testUsers.size());
             return testUsers.get(index);
+        }
+
+        private Long getRandomProductId(TestUser testUser) {
+            var groceryList = testUser.getGroceryList();
+            var index = (int) (Math.random() * groceryList.size());
+            return groceryList.get(index).getId();
         }
 
         private String getActualGroceryList(TestUser testUser) {
