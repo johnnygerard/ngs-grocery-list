@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -78,6 +79,26 @@ public class UserAccountController {
 
         if (passwordEncoder.matches(password, user.getPassword())) {
             userRepository.delete(user);
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    @PatchMapping("/password")
+    public ResponseEntity<Void> updatePassword(
+        @Pattern(regexp = PASSWORD_REGEX) @RequestParam String oldPassword,
+        @Pattern(regexp = PASSWORD_REGEX) @RequestParam String newPassword,
+        Authentication authentication
+    ) {
+        User user = userRepository.findById(getUserId(authentication)).orElseThrow();
+
+        if (passwordEncoder.matches(oldPassword, user.getPassword())) {
+            if (oldPassword.equals(newPassword))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user);
             return ResponseEntity.noContent().build();
         }
 
