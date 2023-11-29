@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/account")
 public class UserAccountController {
     public static final String PASSWORD_REGEX = "^[\\x20-\\x7E]{8,256}$";
     @Autowired
@@ -69,7 +69,7 @@ public class UserAccountController {
             .body("Invalid username or password");
     }
 
-    @DeleteMapping("/account")
+    @DeleteMapping
     public ResponseEntity<Void> deleteAccount(
         @Pattern(regexp = PASSWORD_REGEX) @RequestParam String password,
         Authentication authentication
