@@ -3,7 +3,7 @@ This project is my first full stack web application using Angular and Spring Boo
 It demos CRUD operations on a grocery list with a REST API.  
 The data is stored in an H2 database (in-memory SQL).  
 
-The app is deployed on Heroku: [live demo](https://ngs-grocery-list-03f68985e81c.herokuapp.com/).
+This app was deployed on Heroku.
 
 Note that the app sleeps after 30 minutes of inactivity.  
 In this case, you can expect around 10 seconds of load time.
